@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 // A simple enemy: it has health, flashes when hit and disappears when health reaches 0.
 // Put it on any object that has a Collider (e.g. a Capsule), so arrows can hit it.
+// It walks with a NavMeshAgent, so it finds its way around walls (the room needs a baked NavMesh).
+[RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour
 {
     public int maxHealth = 100;
@@ -17,6 +20,7 @@ public class Enemy : MonoBehaviour
     public int CurrentHealth { get; private set; }
     public bool IsDead => CurrentHealth <= 0;
 
+    private NavMeshAgent agent;
     private Renderer[] renderers;
     private Color[] originalColors;
     private float flashTimer;
@@ -24,6 +28,11 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         CurrentHealth = maxHealth;
+
+        // The agent finds the path and moves us; turning is done by our own TurnTowards
+        agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+        agent.acceleration = 40f; // start and stop quickly instead of sliding
 
         // Remember the normal colors so we can flash and then go back
         renderers = GetComponentsInChildren<Renderer>();
@@ -35,24 +44,21 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // Moves the enemy on the ground and gently pushes it away from other enemies,
-    // so a group doesn't melt into one blob. Used by EnemyChaser and EnemyShooter.
-    public void Move(Vector3 direction, float speed, float personalSpace = 1.2f)
+    // Walks towards a point, going around walls on the way. Used by EnemyChaser and EnemyShooter.
+    // The agent also steers around other enemies, so a group doesn't melt into one blob.
+    public void MoveTo(Vector3 destination, float speed)
     {
-        Vector3 push = Vector3.zero;
-        foreach (Enemy other in All)
-        {
-            if (other == this) continue;
+        if (!agent.isOnNavMesh) return; // e.g. placed off the floor, or the NavMesh isn't baked yet
 
-            Vector3 away = transform.position - other.transform.position;
-            away.y = 0f;
-            float distance = away.magnitude;
-            if (distance > 0.001f && distance < personalSpace) push += away / distance * (personalSpace - distance);
-        }
+        agent.speed = speed;
+        agent.isStopped = false;
+        agent.SetDestination(destination);
+    }
 
-        Vector3 velocity = direction * speed + push * 3f;
-        velocity.y = 0f;
-        transform.position += velocity * Time.deltaTime;
+    // Stands still (for example while winding up an attack)
+    public void Stop()
+    {
+        if (agent.isOnNavMesh) agent.isStopped = true;
     }
 
     // Turns to face a point on the ground (no tilting)

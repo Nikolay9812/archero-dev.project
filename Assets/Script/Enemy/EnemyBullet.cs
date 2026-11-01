@@ -28,6 +28,13 @@ public class EnemyBullet : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        // Walls and obstacles stop the bullet
+        if (other.GetComponentInParent<Wall>() != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         // Fly through enemies, arrows and the floor; only the player matters
         PlayerHealth player = other.GetComponentInParent<PlayerHealth>();
         if (player == null || player.IsDead) return;

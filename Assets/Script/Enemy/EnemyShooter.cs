@@ -43,6 +43,7 @@ public class EnemyShooter : MonoBehaviour
         PlayerHealth player = PlayerHealth.Instance;
         if (player == null || player.IsDead)
         {
+            enemy.Stop();
             CancelWindUp();
             return;
         }
@@ -50,20 +51,27 @@ public class EnemyShooter : MonoBehaviour
         Vector3 toPlayer = player.transform.position - transform.position;
         toPlayer.y = 0f;
         float distance = toPlayer.magnitude;
-        if (distance > detectRange) return;
+        if (distance > detectRange)
+        {
+            enemy.Stop();
+            return;
+        }
 
         enemy.TurnTowards(player.transform.position, turnSpeed);
 
         if (windUpTimer >= 0f)
         {
+            enemy.Stop();
             WindUp(player);
             return;
         }
 
-        // Back off when too close, step in when too far, otherwise hold still
+        // Back off when too close, step in when too far, otherwise hold still.
+        // To back off we aim for a spot 2 m behind us; the NavMesh stops us at walls.
         Vector3 direction = toPlayer / distance;
-        if (distance < preferredDistance - 1f) enemy.Move(-direction, speed);
-        else if (distance > preferredDistance + 1f) enemy.Move(direction, speed);
+        if (distance < preferredDistance - 1f) enemy.MoveTo(transform.position - direction * 2f, speed);
+        else if (distance > preferredDistance + 1f) enemy.MoveTo(player.transform.position, speed);
+        else enemy.Stop();
 
         cooldown -= Time.deltaTime;
         if (cooldown <= 0f) windUpTimer = windUpTime;

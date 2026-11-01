@@ -37,6 +37,7 @@ public class EnemyChaser : MonoBehaviour
         PlayerHealth player = PlayerHealth.Instance;
         if (player == null || player.IsDead)
         {
+            enemy.Stop();
             CancelWindUp();
             return;
         }
@@ -47,22 +48,28 @@ public class EnemyChaser : MonoBehaviour
 
         if (windUpTimer >= 0f)
         {
+            enemy.Stop();
             WindUp(player, distance);
             return;
         }
 
-        if (distance > detectRange) return;
+        if (distance > detectRange)
+        {
+            enemy.Stop();
+            return;
+        }
 
         enemy.TurnTowards(player.transform.position, turnSpeed);
 
         if (distance > attackRange)
         {
-            enemy.Move(toPlayer / distance, speed);
+            // The NavMesh finds the way, even if a wall is in between
+            enemy.MoveTo(player.transform.position, speed);
+            return;
         }
-        else if (cooldown <= 0f)
-        {
-            windUpTimer = windUpTime;
-        }
+
+        enemy.Stop();
+        if (cooldown <= 0f) windUpTimer = windUpTime;
     }
 
     void WindUp(PlayerHealth player, float distance)

@@ -28,7 +28,14 @@ public class Arrow : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // Ignore everything that isn't an enemy (the player, the floor, other arrows)
+        // Walls and obstacles stop the arrow
+        if (other.GetComponentInParent<Wall>() != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // Ignore everything else that isn't an enemy (the player, the floor, other arrows)
         Enemy enemy = other.GetComponentInParent<Enemy>();
         if (enemy == null || enemy.IsDead) return;
 
