@@ -7,7 +7,8 @@ using UnityEngine;
 public class Room : MonoBehaviour
 {
     public GameObject enemies; // parent object holding this room's enemies
-    public Door exitDoor;      // opens when the room is cleared (leave empty for the last room)
+    public Door exitDoor;      // opens when the room is cleared
+    public Door entranceDoor;  // optional: closes behind the player when they walk in (tick "Starts Open" on it)
 
     public bool IsCleared { get; private set; }
 
@@ -64,6 +65,7 @@ public class Room : MonoBehaviour
         isActive = true;
 
         if (enemies != null) enemies.SetActive(true);
+        if (entranceDoor != null) entranceDoor.Close(); // no going back
     }
 
     // Only checks the floor area (x and z), so the player's height doesn't matter

@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // Shows "GAME OVER" with a Retry button when the player dies, and pauses the game.
+// Shows "STAGE CLEAR" the same way when the player reaches the StageExit.
 // It builds its own UI when the game starts, so you only need to add this component to an empty GameObject.
 public class GameOverScreen : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class GameOverScreen : MonoBehaviour
     public Color buttonColor = new Color(0.95f, 0.65f, 0.15f);
 
     private GameObject panel;
+    private Text titleText;
+    private Text buttonText;
 
     void Awake()
     {
@@ -24,20 +27,34 @@ public class GameOverScreen : MonoBehaviour
     void OnEnable()
     {
         PlayerHealth.Died += OnPlayerDied;
+        StageExit.Reached += OnStageCleared;
     }
 
     void OnDisable()
     {
         PlayerHealth.Died -= OnPlayerDied;
+        StageExit.Reached -= OnStageCleared;
     }
 
     void OnPlayerDied()
     {
-        Invoke(nameof(Show), showDelay);
+        Invoke(nameof(ShowGameOver), showDelay);
     }
 
-    void Show()
+    void OnStageCleared()
     {
+        Show("STAGE CLEAR", "PLAY AGAIN");
+    }
+
+    void ShowGameOver()
+    {
+        Show("GAME OVER", "RETRY");
+    }
+
+    void Show(string title, string buttonLabel)
+    {
+        titleText.text = title;
+        buttonText.text = buttonLabel;
         panel.SetActive(true);
         Time.timeScale = 0f; // freeze enemies and bullets
     }
@@ -93,7 +110,7 @@ public class GameOverScreen : MonoBehaviour
 
         Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
-        CreateText("Title", panel.transform, font, "GAME OVER", 120, new Vector2(0f, 200f), new Vector2(1000f, 160f));
+        titleText = CreateText("Title", panel.transform, font, "GAME OVER", 120, new Vector2(0f, 200f), new Vector2(1000f, 160f));
 
         // Retry button
         GameObject buttonObject = new GameObject("RetryButton", typeof(Image), typeof(Button));
@@ -104,10 +121,10 @@ public class GameOverScreen : MonoBehaviour
         buttonRect.anchoredPosition = new Vector2(0f, -100f);
         buttonObject.GetComponent<Button>().onClick.AddListener(Retry);
 
-        CreateText("Label", buttonObject.transform, font, "RETRY", 72, Vector2.zero, buttonRect.sizeDelta);
+        buttonText = CreateText("Label", buttonObject.transform, font, "RETRY", 72, Vector2.zero, buttonRect.sizeDelta);
     }
 
-    static void CreateText(string name, Transform parent, Font font, string content, int fontSize, Vector2 position, Vector2 size)
+    static Text CreateText(string name, Transform parent, Font font, string content, int fontSize, Vector2 position, Vector2 size)
     {
         GameObject textObject = new GameObject(name, typeof(Text));
         textObject.transform.SetParent(parent, false);
@@ -124,5 +141,6 @@ public class GameOverScreen : MonoBehaviour
         RectTransform rect = text.rectTransform;
         rect.sizeDelta = size;
         rect.anchoredPosition = position;
+        return text;
     }
 }
