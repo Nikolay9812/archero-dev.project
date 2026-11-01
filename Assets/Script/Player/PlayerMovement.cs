@@ -1,34 +1,69 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// Archero-style movement: move in world directions (W = up the screen),
+// turn smoothly to face the direction of travel, and stay on the ground.
+[RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-    // Movement tining (editable in Inspector)
+    // Movement tuning (editable in Inspector)
     public float speed = 5.0f;
-    public float turnSpeed = 100f;
-    // Input System action exposed in Inspector for binding (WASD/Arrow keys)
-    public InputAction moveAction;
-    // Current input value (x = left/right, y = forward/back), kept private for internal use
-    private Vector2 moveInput;
+    public float turnSpeed = 720f; // degrees per second
+    public float gravity = -20f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Drag the "Gameplay/Move" action from GameInputActions here in the Inspector
+    public InputActionReference moveAction;
 
-    void Start()
+    // On-screen joystick for phones. If left empty, it is found automatically.
+    public FloatingJoystick joystick;
+
+    // True while the player is walking. Later the auto-shoot will only fire when this is false.
+    public bool IsMoving { get; private set; }
+
+    private CharacterController controller;
+    private float verticalVelocity;
+
+    void Awake()
     {
-        // Enable the moveAcrtion so it starts reading input
-        moveAction.Enable();
+        controller = GetComponent<CharacterController>();
+        if (joystick == null) joystick = FindFirstObjectByType<FloatingJoystick>();
     }
 
-    // Update is called once per frame
+    void OnEnable()
+    {
+        // Start reading input
+        if (moveAction != null) moveAction.action.Enable();
+    }
+
+    void OnDisable()
+    {
+        if (moveAction != null) moveAction.action.Disable();
+    }
+
     void Update()
     {
-        // Read the 2D vector from the moveAction (x: horizontal, y: vertical)
-        moveInput = moveAction.ReadValue<Vector2>();
+        // x = left/right, y = forward/back
+        Vector2 input = moveAction != null ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
 
-        // Move forward/back along local Z using y component
-        transform.Translate(Vector3.forward * Time.deltaTime * speed * moveInput.y);
+        // The joystick wins while a finger (or the mouse) is dragging it
+        if (joystick != null && joystick.Direction != Vector2.zero) input = joystick.Direction;
 
-        // Rotate around local Y (yaw) using the x component
-        transform.Translate(Vector3.right * Time.deltaTime * speed * moveInput.x);
+        // World-space direction on the ground (XZ plane). Clamp so diagonals aren't faster.
+        Vector3 direction = Vector3.ClampMagnitude(new Vector3(input.x, 0f, input.y), 1f);
+        IsMoving = direction.sqrMagnitude > 0.01f;
+
+        // Turn to face where we're walking
+        if (IsMoving)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
+        }
+
+        // Simple gravity so the player sticks to the floor
+        if (controller.isGrounded && verticalVelocity < 0f) verticalVelocity = -2f;
+        verticalVelocity += gravity * Time.deltaTime;
+
+        Vector3 velocity = direction * speed + Vector3.up * verticalVelocity;
+        controller.Move(velocity * Time.deltaTime);
     }
 }
