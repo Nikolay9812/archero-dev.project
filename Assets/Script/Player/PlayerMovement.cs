@@ -20,13 +20,16 @@ public class PlayerMovement : MonoBehaviour
     // True while the player is walking. Later the auto-shoot will only fire when this is false.
     public bool IsMoving { get; private set; }
 
+    // How hard the stick is pushed: 0 = standing, 1 = full speed. The animation script reads this.
+    public float MoveAmount { get; private set; }
+
     private CharacterController controller;
     private float verticalVelocity;
 
     void Awake()
     {
         controller = GetComponent<CharacterController>();
-        if (joystick == null) joystick = FindFirstObjectByType<FloatingJoystick>();
+        if (joystick == null) joystick = FindAnyObjectByType<FloatingJoystick>();
     }
 
     void OnEnable()
@@ -38,6 +41,10 @@ public class PlayerMovement : MonoBehaviour
     void OnDisable()
     {
         if (moveAction != null) moveAction.action.Disable();
+
+        // When she dies this script is turned off, so make sure she doesn't keep "walking"
+        IsMoving = false;
+        MoveAmount = 0f;
     }
 
     void Update()
@@ -51,6 +58,7 @@ public class PlayerMovement : MonoBehaviour
         // World-space direction on the ground (XZ plane). Clamp so diagonals aren't faster.
         Vector3 direction = Vector3.ClampMagnitude(new Vector3(input.x, 0f, input.y), 1f);
         IsMoving = direction.sqrMagnitude > 0.01f;
+        MoveAmount = IsMoving ? direction.magnitude : 0f;
 
         // Turn to face where we're walking
         if (IsMoving)

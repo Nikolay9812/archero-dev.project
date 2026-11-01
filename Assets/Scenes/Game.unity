@@ -224,6 +224,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3288981919052749849, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ef4c9f9b0487b5e4eb8d7a4ad2779033, type: 2}
+    - target: {fileID: 3288981919052749849, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
       propertyPath: m_Name
       value: Player
@@ -284,6 +292,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2101363879}
+    - targetCorrespondingSourceObject: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2101363881}
   m_SourcePrefab: {fileID: 100100000, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
 --- !u!1 &226436443
 GameObject:
@@ -1146,6 +1157,20 @@ MonoBehaviour:
   barSize: {x: 1.2, y: 0.16}
   barColor: {r: 0.3, g: 0.85, b: 0.3, a: 1}
   barLowColor: {r: 0.9, g: 0.25, b: 0.2, a: 1}
+--- !u!114 &2101363881
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101363873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 217667b7cd41ea946a1ac40bb6ba383b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
+  animator: {fileID: 0}
+  blendTime: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

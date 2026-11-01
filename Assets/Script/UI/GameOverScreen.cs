@@ -65,7 +65,7 @@ public class GameOverScreen : MonoBehaviour
     void BuildUI()
     {
         // Buttons need an EventSystem to receive clicks/taps
-        if (FindFirstObjectByType<EventSystem>() == null)
+        if (FindAnyObjectByType<EventSystem>() == null)
         {
             new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
         }
