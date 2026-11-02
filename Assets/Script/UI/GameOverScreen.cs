@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 // Shows "GAME OVER" with a Retry button when the player dies, and pauses the game.
-// Shows "STAGE CLEAR" the same way when the player reaches the StageExit.
+// Shows "STAGE CLEAR" the same way when ChapterManager says the last room is done.
 // It builds its own UI when the game starts, so you only need to add this component to an empty GameObject.
 public class GameOverScreen : MonoBehaviour
 {
@@ -27,13 +27,13 @@ public class GameOverScreen : MonoBehaviour
     void OnEnable()
     {
         PlayerHealth.Died += OnPlayerDied;
-        StageExit.Reached += OnStageCleared;
+        ChapterManager.ChapterCleared += OnStageCleared;
     }
 
     void OnDisable()
     {
         PlayerHealth.Died -= OnPlayerDied;
-        StageExit.Reached -= OnStageCleared;
+        ChapterManager.ChapterCleared -= OnStageCleared;
     }
 
     void OnPlayerDied()

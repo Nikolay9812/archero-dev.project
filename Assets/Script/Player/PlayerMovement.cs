@@ -74,4 +74,14 @@ public class PlayerMovement : MonoBehaviour
         Vector3 velocity = direction * speed + Vector3.up * verticalVelocity;
         controller.Move(velocity * Time.deltaTime);
     }
+
+    // Puts the player somewhere else instantly (used when a new room is loaded).
+    // A CharacterController ignores position changes while it's on, so switch it off for a moment.
+    public void Teleport(Vector3 position, Quaternion rotation)
+    {
+        controller.enabled = false;
+        transform.SetPositionAndRotation(position, rotation);
+        controller.enabled = true;
+        verticalVelocity = 0f;
+    }
 }

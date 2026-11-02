@@ -1,48 +1,47 @@
+using Unity.AI.Navigation;
 using UnityEngine;
 
-// One room of the level. Its enemies sleep until the player walks in.
-// When they are all dead the exit door opens, and the player walks on to the next room.
-// Needs a Box Collider that covers the room's floor (it is turned into a trigger automatically).
-[RequireComponent(typeof(BoxCollider))]
+// One room of a chapter, saved as a prefab. ChapterManager spawns it, puts the player on
+// "playerStart" and calls Activate() once the screen has faded in.
+// When all its enemies are dead the exit door opens, and the player walks into the RoomExit behind it.
+//
+// The room bakes its own NavMesh when it is spawned (so you never have to press "Bake"),
+// which is why the room object also needs a NavMeshSurface component.
+[RequireComponent(typeof(NavMeshSurface))]
 public class Room : MonoBehaviour
 {
-    public GameObject enemies; // parent object holding this room's enemies
-    public Door exitDoor;      // opens when the room is cleared
-    public Door entranceDoor;  // optional: closes behind the player when they walk in (tick "Starts Open" on it)
+    public Door exitDoor;         // opens when the room is cleared
+    public Transform playerStart; // where the player appears (an empty object near the bottom wall)
 
     public bool IsCleared { get; private set; }
 
-    private BoxCollider area;
     private Enemy[] roomEnemies;
     private bool isActive;
 
     void Awake()
     {
-        area = GetComponent<BoxCollider>();
-        area.isTrigger = true;
+        // Every enemy anywhere inside the room belongs to it (true = also find inactive ones).
+        // Put them all to sleep until the player can see the room.
+        roomEnemies = GetComponentsInChildren<Enemy>(true);
+        foreach (Enemy enemy in roomEnemies)
+        {
+            enemy.gameObject.SetActive(false);
+            WakeUpParents(enemy.transform);
+        }
 
-        // Remember who lives here (true = also find inactive ones), then put them to sleep
-        if (enemies != null)
-        {
-            roomEnemies = enemies.GetComponentsInChildren<Enemy>(true);
-            enemies.SetActive(false);
-        }
-        else
-        {
-            roomEnemies = new Enemy[0];
-        }
+        BuildNavMesh();
     }
 
-    void Start()
+    // Called by ChapterManager when the player is in place and can see the room
+    public void Activate()
     {
-        // The player may already be standing in this room when the game starts (the first room)
-        PlayerHealth player = PlayerHealth.Instance;
-        if (player != null && IsInside(player.transform.position)) Activate();
-    }
+        if (isActive) return;
+        isActive = true;
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.GetComponentInParent<PlayerHealth>() != null) Activate();
+        foreach (Enemy enemy in roomEnemies)
+        {
+            enemy.gameObject.SetActive(true);
+        }
     }
 
     void Update()
@@ -55,35 +54,47 @@ public class Room : MonoBehaviour
             if (enemy != null) return;
         }
 
+        // (A room with no enemies at all is cleared straight away)
         IsCleared = true;
         if (exitDoor != null) exitDoor.Open();
         XpOrb.CollectAll(); // the reward: all XP on the floor flies to the player
     }
 
-    void Activate()
+    // In the prefab the "Enemies" object is unticked, so the enemies don't wake up before
+    // the NavMesh exists (that gives "Failed to create agent" warnings).
+    // The enemies themselves are asleep now, so switch their parent objects back on.
+    void WakeUpParents(Transform enemy)
     {
-        if (isActive) return;
-        isActive = true;
-
-        if (enemies != null) enemies.SetActive(true);
-        if (entranceDoor != null) entranceDoor.Close(); // no going back
+        Transform parent = enemy.parent;
+        while (parent != null && parent != transform)
+        {
+            parent.gameObject.SetActive(true);
+            parent = parent.parent;
+        }
     }
 
-    // Only checks the floor area (x and z), so the player's height doesn't matter
-    bool IsInside(Vector3 point)
+    void BuildNavMesh()
     {
-        Bounds bounds = area.bounds;
-        point.y = bounds.center.y;
-        return bounds.Contains(point);
+        NavMeshSurface surface = GetComponent<NavMeshSurface>();
+        if (surface == null)
+        {
+            Debug.LogError(name + " needs a NavMeshSurface component, or its enemies can't walk.");
+            return;
+        }
+
+        // Only look at this room's own children, and use their colliders as the shape of the level.
+        // The enemies are inactive right now, so they don't punch holes in the NavMesh.
+        surface.collectObjects = CollectObjects.Children;
+        surface.useGeometry = UnityEngine.AI.NavMeshCollectGeometry.PhysicsColliders;
+        surface.BuildNavMesh();
     }
 
-    // Shows the room area in the Scene view when selected
+    // Shows the player start in the Scene view when the room is selected
     void OnDrawGizmosSelected()
     {
-        BoxCollider box = GetComponent<BoxCollider>();
-        if (box == null) return;
+        if (playerStart == null) return;
 
-        Gizmos.color = new Color(0.3f, 1f, 0.5f, 0.25f);
-        Gizmos.DrawCube(box.bounds.center, box.bounds.size);
+        Gizmos.color = new Color(0.3f, 1f, 0.5f);
+        Gizmos.DrawWireSphere(playerStart.position, 0.5f);
     }
 }

@@ -1,14 +1,15 @@
 using System;
 using UnityEngine;
 
-// The finish line: put it just behind the last room's exit door.
-// When the player walks into it the stage is cleared, and GameOverScreen shows "STAGE CLEAR".
+// The way out of a room: put it just behind the room's exit door.
+// The door blocks it until the room is cleared. When the player walks in,
+// ChapterManager fades out and loads the next room (or shows "STAGE CLEAR" after the last one).
 // Needs a Box Collider (it is turned into a trigger automatically).
 // Don't put it under "Walls", or arrows would break on it.
 [RequireComponent(typeof(BoxCollider))]
-public class StageExit : MonoBehaviour
+public class RoomExit : MonoBehaviour
 {
-    // GameOverScreen listens to this, the same way it listens to PlayerHealth.Died
+    // ChapterManager listens to this
     public static event Action Reached;
 
     private bool reached;

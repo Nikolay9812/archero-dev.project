@@ -24,11 +24,18 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
+        SnapToTarget();
+    }
+
+    // Jumps straight to the player and aims at them; the angle then stays fixed.
+    // Also used by ChapterManager after the player is moved to a new room.
+    public void SnapToTarget()
+    {
         if (target == null) return;
 
-        // Snap into place and aim at the player once; the angle then stays fixed
         transform.position = target.position + offset;
         transform.rotation = Quaternion.LookRotation(-offset);
+        velocity = Vector3.zero; // forget the old smoothing speed
     }
 
     void LateUpdate()
