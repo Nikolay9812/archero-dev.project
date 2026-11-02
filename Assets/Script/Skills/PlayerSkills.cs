@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlayerSkills : MonoBehaviour
 {
     // Every skill picked this run, in order (handy for a "your skills" list later)
-    public List<Skill> Taken { get; } = new List<Skill>();
+    public List<SkillData> Taken { get; } = new List<SkillData>();
 
     private PlayerHealth health;
     private PlayerShooter shooter;
@@ -19,7 +19,7 @@ public class PlayerSkills : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
     }
 
-    public void Apply(Skill skill)
+    public void Apply(SkillData skill)
     {
         Taken.Add(skill);
 

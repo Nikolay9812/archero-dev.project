@@ -5,31 +5,23 @@ using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 // When the player levels up: pause the game and show 3 random skill cards. Tapping a card applies
-// the skill and the game goes on. The skills to pick from are in the 'skills' list below,
-// which you can edit in the Inspector.
+// the skill and the game goes on. The skills to pick from are SkillData assets:
+// drag them from the Project window into the 'skills' list in the Inspector.
 // It builds its own UI when the game starts, so you only need to add this component to an empty GameObject.
 public class SkillChoiceScreen : MonoBehaviour
 {
     public int cardCount = 3;
     public Color overlayColor = new Color(0f, 0f, 0f, 0.75f);
-    public Color cardColor = new Color(0.2f, 0.35f, 0.6f);
 
-    // The starting values below show up in the Inspector when you add this component
-    public List<Skill> skills = new List<Skill>
-    {
-        new Skill("Attack Boost", "+20% damage", SkillType.AttackUp, 0.2f),
-        new Skill("Quick Shot", "+15% attack speed", SkillType.AttackSpeedUp, 0.15f),
-        new Skill("Vitality", "+20% max HP", SkillType.MaxHealthUp, 0.2f),
-        new Skill("Heal", "Restore 40% HP", SkillType.Heal, 0.4f),
-        new Skill("Swift Feet", "+10% move speed", SkillType.MoveSpeedUp, 0.1f),
-    };
+    // Every skill that can show up on a card (Assets/Skills)
+    public List<SkillData> skills = new List<SkillData>();
 
     private GameObject panel;
     private Button[] cardButtons;
     private Text[] cardTitles;
     private Text[] cardDescriptions;
 
-    private List<Skill> shownSkills = new List<Skill>(); // the skills on the cards right now
+    private List<SkillData> shownSkills = new List<SkillData>(); // the skills on the cards right now
     private int choicesWaiting; // level-ups that still need a choice (two can happen at once)
 
     void Awake()
@@ -58,6 +50,14 @@ public class SkillChoiceScreen : MonoBehaviour
     {
         PickRandomSkills();
 
+        if (shownSkills.Count == 0)
+        {
+            // Don't pause the game forever with an empty screen
+            Debug.LogWarning("SkillChoiceScreen has no skills: drag SkillData assets into its Skills list.");
+            choicesWaiting = 0;
+            return;
+        }
+
         for (int i = 0; i < cardButtons.Length; i++)
         {
             // Fewer skills than cards? Hide the extra cards.
@@ -67,6 +67,7 @@ public class SkillChoiceScreen : MonoBehaviour
 
             cardTitles[i].text = shownSkills[i].title;
             cardDescriptions[i].text = shownSkills[i].description;
+            cardButtons[i].image.color = shownSkills[i].cardColor;
         }
 
         panel.SetActive(true);
@@ -77,7 +78,8 @@ public class SkillChoiceScreen : MonoBehaviour
     void PickRandomSkills()
     {
         shownSkills.Clear();
-        List<Skill> pool = new List<Skill>(skills); // a copy, so we can remove from it
+        List<SkillData> pool = new List<SkillData>(skills); // a copy, so we can remove from it
+        pool.RemoveAll(skill => skill == null);              // skip empty slots in the Inspector list
 
         while (shownSkills.Count < cardCount && pool.Count > 0)
         {
@@ -155,7 +157,6 @@ public class SkillChoiceScreen : MonoBehaviour
         {
             GameObject cardObject = new GameObject("Card" + i, typeof(Image), typeof(Button));
             cardObject.transform.SetParent(panel.transform, false);
-            cardObject.GetComponent<Image>().color = cardColor;
             RectTransform cardRect = cardObject.GetComponent<RectTransform>();
             cardRect.sizeDelta = cardSize;
             cardRect.anchoredPosition = new Vector2(0f, 250f - i * spacing);

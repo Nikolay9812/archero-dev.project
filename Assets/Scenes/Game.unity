@@ -3205,28 +3205,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillChoiceScreen
   cardCount: 3
   overlayColor: {r: 0, g: 0, b: 0, a: 0.75}
-  cardColor: {r: 0.2, g: 0.35, b: 0.6, a: 1}
   skills:
-  - title: Attack Boost
-    description: +20% damage
-    type: 0
-    amount: 0.2
-  - title: Quick Shot
-    description: +15% attack speed
-    type: 1
-    amount: 0.15
-  - title: Vitality
-    description: +20% max HP
-    type: 2
-    amount: 0.2
-  - title: Heal
-    description: Restore 40% HP
-    type: 3
-    amount: 0.4
-  - title: Swift Feet
-    description: +10% move speed
-    type: 4
-    amount: 0.1
+  - {fileID: 11400000, guid: 6c619aa5a85e5cf44a9534f6d6abb166, type: 2}
+  - {fileID: 11400000, guid: 42ec2b259a83dc54ba08ecd2f061aa54, type: 2}
+  - {fileID: 11400000, guid: 7f0c2589f0c1c20458b5090131c9eb3f, type: 2}
+  - {fileID: 11400000, guid: e69a4e3f2e8e8e5449160570c7c581d4, type: 2}
+  - {fileID: 11400000, guid: b567ae6c05194d7419d1eca718608f65, type: 2}
+  - {fileID: 11400000, guid: 3ec0b3274c1f2c942bdd9c1fde0de018, type: 2}
 --- !u!4 &1250149417
 Transform:
   m_ObjectHideFlags: 0
