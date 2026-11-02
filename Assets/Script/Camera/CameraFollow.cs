@@ -10,7 +10,17 @@ public class CameraFollow : MonoBehaviour
     public Vector3 offset = new Vector3(0f, 14f, -8f);
     public float smoothTime = 0.15f; // lower = snappier
 
+    // How many meters of the level should fit across the screen (the room is 12 m wide + walls).
+    // Phones have different shapes, so the camera zooms to always show this width.
+    public float visibleWidth = 14f;
+
     private Vector3 velocity;
+    private Camera cam;
+
+    void Awake()
+    {
+        cam = GetComponent<Camera>();
+    }
 
     void Start()
     {
@@ -23,6 +33,8 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
+        FitWidth();
+
         if (target == null) return;
 
         Vector3 desiredPosition = target.position + offset;
@@ -36,5 +48,18 @@ public class CameraFollow : MonoBehaviour
         }
 
         transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
+    }
+
+    // Unity's Field of View is the VERTICAL angle. On a tall phone that leaves very little width,
+    // so we work backwards: from the width we want to see, calculate the vertical angle.
+    void FitWidth()
+    {
+        if (cam == null) cam = GetComponent<Camera>();
+        if (cam == null || visibleWidth <= 0f) return;
+
+        float distance = offset.magnitude; // how far the camera is from the player
+        float halfWidthAngle = Mathf.Atan(visibleWidth * 0.5f / distance);         // horizontal half-angle
+        float halfHeightAngle = Mathf.Atan(Mathf.Tan(halfWidthAngle) / cam.aspect); // aspect = width / height
+        cam.fieldOfView = halfHeightAngle * 2f * Mathf.Rad2Deg;
     }
 }

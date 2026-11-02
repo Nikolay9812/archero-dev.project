@@ -1,0 +1,13 @@
+<!--
+  Tells Unity's build "stripping" step which engine classes to keep.
+  When building for phones, Unity removes every engine class that isn't used in a scene,
+  to make the app smaller. Classes we only create from code (for example the SphereCollider
+  that GameObject.CreatePrimitive(PrimitiveType.Sphere) adds to enemy bullets) look unused,
+  so they would be removed and the bullets would have no collider in the build.
+-->
+<linker>
+  <assembly fullname="UnityEngine.PhysicsModule">
+    <type fullname="UnityEngine.SphereCollider" preserve="all" />
+    <type fullname="UnityEngine.BoxCollider" preserve="all" />
+  </assembly>
+</linker>

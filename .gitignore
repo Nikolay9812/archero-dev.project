@@ -32,3 +32,6 @@ Assets/AssetStoreTools*
 # ========== OS FILES ==========
 .DS_Store
 Thumbs.db
+
+# Unity build tools temp folder
+.utmp/
