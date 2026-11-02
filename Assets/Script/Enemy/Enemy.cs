@@ -13,6 +13,10 @@ public class Enemy : MonoBehaviour
     public Color hitFlashColor = Color.white;
     public float hitFlashTime = 0.1f;
 
+    // XP dropped on death: this many orbs, each worth xpPerOrb
+    public int xpOrbs = 3;
+    public int xpPerOrb = 5;
+
     // Every living enemy in the scene. The player's auto-shoot looks here for the nearest target,
     // so we don't need tags or FindObjectsByType every frame.
     public static readonly List<Enemy> All = new List<Enemy>();
@@ -103,7 +107,14 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        // Later: death animation, coins, XP...
+        // The agent floats 'baseOffset' above the NavMesh, so this is the point on the floor under us
+        Vector3 floor = transform.position - Vector3.up * agent.baseOffset;
+        for (int i = 0; i < xpOrbs; i++)
+        {
+            XpOrb.Spawn(floor + Vector3.up * 0.3f, xpPerOrb, 1.2f);
+        }
+
+        // Later: death animation, coins...
         Destroy(gameObject);
     }
 

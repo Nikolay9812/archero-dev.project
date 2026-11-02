@@ -57,6 +57,7 @@ public class Room : MonoBehaviour
 
         IsCleared = true;
         if (exitDoor != null) exitDoor.Open();
+        XpOrb.CollectAll(); // the reward: all XP on the floor flies to the player
     }
 
     void Activate()
