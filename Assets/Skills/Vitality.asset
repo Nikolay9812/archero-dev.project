@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb43e257e2a3aaf49b9a887c8f14aca2, type: 3}
   m_Name: Vitality
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 1d40d941993049239a302ab226fcf611, type: 3}
   title: Vitality
   description: +20% max HP
   type: 2

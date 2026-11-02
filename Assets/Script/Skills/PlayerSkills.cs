@@ -46,6 +46,19 @@ public class PlayerSkills : MonoBehaviour
             case SkillType.MoveSpeedUp:
                 movement.speed *= 1f + skill.amount;
                 break;
+
+            // Arrow skills: amount is a count, so turn it into a whole number. += lets them stack.
+            case SkillType.FrontArrow:
+                shooter.frontArrows += Mathf.RoundToInt(skill.amount);
+                break;
+
+            case SkillType.DiagonalArrows:
+                shooter.diagonalPairs += Mathf.RoundToInt(skill.amount);
+                break;
+
+            case SkillType.Ricochet:
+                shooter.ricochetBounces += Mathf.RoundToInt(skill.amount);
+                break;
         }
 
         Debug.Log("Skill taken: " + skill.title);

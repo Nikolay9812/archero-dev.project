@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb43e257e2a3aaf49b9a887c8f14aca2, type: 3}
   m_Name: QuickShot
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: d7b1c29997814ae1aa5fd76924563637, type: 3}
   title: Quick Shot
   description: +15% attack speed
   type: 1

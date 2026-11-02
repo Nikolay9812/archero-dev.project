@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb43e257e2a3aaf49b9a887c8f14aca2, type: 3}
   m_Name: BigHeal
   m_EditorClassIdentifier: Assembly-CSharp::SkillData
+  icon: {fileID: 21300000, guid: 3e9398058a47406793ed620136434ffa, type: 3}
   title: Big Heal
   description: Restore 80% HP
   type: 3

@@ -18,6 +18,7 @@ public class SkillChoiceScreen : MonoBehaviour
 
     private GameObject panel;
     private Button[] cardButtons;
+    private Image[] cardIcons;
     private Text[] cardTitles;
     private Text[] cardDescriptions;
 
@@ -68,6 +69,11 @@ public class SkillChoiceScreen : MonoBehaviour
             cardTitles[i].text = shownSkills[i].title;
             cardDescriptions[i].text = shownSkills[i].description;
             cardButtons[i].image.color = shownSkills[i].cardColor;
+
+            // No picture set on the skill yet? Hide the icon instead of showing a white square.
+            Sprite icon = shownSkills[i].icon;
+            cardIcons[i].sprite = icon;
+            cardIcons[i].gameObject.SetActive(icon != null);
         }
 
         panel.SetActive(true);
@@ -142,16 +148,17 @@ public class SkillChoiceScreen : MonoBehaviour
 
         Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
-        Text header = CreateText("Header", panel.transform, font, 80, new Vector2(0f, 600f), new Vector2(1000f, 120f));
+        Text header = CreateText("Header", panel.transform, font, 80, new Vector2(0f, 400f), new Vector2(1000f, 120f));
         header.text = "CHOOSE A SKILL";
         header.color = new Color(1f, 0.85f, 0.3f);
 
-        // The cards, one under the other (the screen is tall, not wide)
+        // The cards, side by side in one row (like Archero)
         cardButtons = new Button[cardCount];
+        cardIcons = new Image[cardCount];
         cardTitles = new Text[cardCount];
         cardDescriptions = new Text[cardCount];
-        Vector2 cardSize = new Vector2(800f, 260f);
-        float spacing = 300f;
+        Vector2 cardSize = new Vector2(320f, 520f);
+        float spacing = 345f; // card width + a gap
 
         for (int i = 0; i < cardCount; i++)
         {
@@ -159,10 +166,26 @@ public class SkillChoiceScreen : MonoBehaviour
             cardObject.transform.SetParent(panel.transform, false);
             RectTransform cardRect = cardObject.GetComponent<RectTransform>();
             cardRect.sizeDelta = cardSize;
-            cardRect.anchoredPosition = new Vector2(0f, 250f - i * spacing);
 
-            cardTitles[i] = CreateText("Title", cardObject.transform, font, 64, new Vector2(0f, 45f), new Vector2(cardSize.x, 90f));
-            cardDescriptions[i] = CreateText("Description", cardObject.transform, font, 42, new Vector2(0f, -55f), new Vector2(cardSize.x, 70f));
+            // Center the row: 3 cards -> x = -1, 0, +1 times spacing (same trick as the front arrows)
+            float x = (i - (cardCount - 1) / 2f) * spacing;
+            cardRect.anchoredPosition = new Vector2(x, 0f);
+
+            // Icon in the top half of the card
+            GameObject iconObject = new GameObject("Icon", typeof(Image));
+            iconObject.transform.SetParent(cardObject.transform, false);
+            cardIcons[i] = iconObject.GetComponent<Image>();
+            cardIcons[i].preserveAspect = true; // don't squash pictures that aren't square
+            cardIcons[i].raycastTarget = false;
+            cardIcons[i].rectTransform.sizeDelta = new Vector2(240f, 240f);
+            cardIcons[i].rectTransform.anchoredPosition = new Vector2(0f, 115f);
+
+            // Title and description under the icon. Wrap = long text goes onto a second line.
+            cardTitles[i] = CreateText("Title", cardObject.transform, font, 38, new Vector2(0f, -55f), new Vector2(300f, 90f));
+            cardTitles[i].horizontalOverflow = HorizontalWrapMode.Wrap;
+            cardDescriptions[i] = CreateText("Description", cardObject.transform, font, 30, new Vector2(0f, -170f), new Vector2(290f, 120f));
+            cardDescriptions[i].horizontalOverflow = HorizontalWrapMode.Wrap;
+            cardDescriptions[i].fontStyle = FontStyle.Normal;
 
             // Copy i into a new variable: the button remembers 'index' for later,
             // and every card needs its own number (i itself keeps changing in the loop)

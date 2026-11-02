@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb43e257e2a3aaf49b9a887c8f14aca2, type: 3}
   m_Name: Heal
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 01bd45e31b0648e6b710980218fae1e2, type: 3}
   title: Heal
   description: Restore 40% HP
   type: 3

@@ -2102,6 +2102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 804751554}
+  - component: {fileID: 804751555}
   m_Layer: 0
   m_Name: Walls
   m_TagString: Untagged
@@ -2135,6 +2136,18 @@ Transform:
   - {fileID: 2014925073}
   m_Father: {fileID: 988982245}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &804751555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804751553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0556ebf958bcf804392503d23c026372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wall
 --- !u!1 &853929135
 GameObject:
   m_ObjectHideFlags: 0
@@ -2784,6 +2797,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1133578916}
+  - component: {fileID: 1133578917}
   m_Layer: 0
   m_Name: Corridor1
   m_TagString: Untagged
@@ -2808,6 +2822,18 @@ Transform:
   - {fileID: 732788527}
   m_Father: {fileID: 1516839280}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1133578917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1133578915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0556ebf958bcf804392503d23c026372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wall
 --- !u!1 &1172480495
 GameObject:
   m_ObjectHideFlags: 0
@@ -3212,6 +3238,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e69a4e3f2e8e8e5449160570c7c581d4, type: 2}
   - {fileID: 11400000, guid: b567ae6c05194d7419d1eca718608f65, type: 2}
   - {fileID: 11400000, guid: 3ec0b3274c1f2c942bdd9c1fde0de018, type: 2}
+  - {fileID: 11400000, guid: d2b61a9663629a648a68c5b9d0e742d8, type: 2}
+  - {fileID: 11400000, guid: 0605e473863546d4689e7dadf2b7228a, type: 2}
+  - {fileID: 11400000, guid: 196e3d55cc76d3b41b7d1981d017f51d, type: 2}
 --- !u!4 &1250149417
 Transform:
   m_ObjectHideFlags: 0
@@ -3883,6 +3912,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1691778251}
+  - component: {fileID: 1691778252}
   m_Layer: 0
   m_Name: Walls
   m_TagString: Untagged
@@ -3912,6 +3942,18 @@ Transform:
   - {fileID: 1172480496}
   m_Father: {fileID: 1083424180}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1691778252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691778250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0556ebf958bcf804392503d23c026372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Wall
 --- !u!1 &1711325388
 GameObject:
   m_ObjectHideFlags: 0
@@ -4917,6 +4959,11 @@ MonoBehaviour:
   turnSpeed: 720
   aimTolerance: 10
   shootOffset: {x: 0, y: 1, z: 0.6}
+  frontArrows: 1
+  frontArrowSpacing: 0.4
+  diagonalPairs: 0
+  diagonalAngle: 30
+  ricochetBounces: 0
 --- !u!114 &2101363879
 MonoBehaviour:
   m_ObjectHideFlags: 0

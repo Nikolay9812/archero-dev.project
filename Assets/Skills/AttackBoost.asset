@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb43e257e2a3aaf49b9a887c8f14aca2, type: 3}
   m_Name: AttackBoost
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 7c931f6c0de54216bf2ff8c858902a03, type: 3}
   title: Attack Boost
   description: +20% damage
   type: 0

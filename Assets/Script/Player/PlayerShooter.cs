@@ -16,6 +16,13 @@ public class PlayerShooter : MonoBehaviour
     public float aimTolerance = 10f;   // only shoot when facing the enemy within this angle
     public Vector3 shootOffset = new Vector3(0f, 1f, 0.6f); // where arrows spawn (up, forward from the player)
 
+    // Arrow skills (PlayerSkills raises these)
+    public int frontArrows = 1;          // arrows flying straight ahead, side by side
+    public float frontArrowSpacing = 0.4f;
+    public int diagonalPairs = 0;        // each pair = one arrow to the left and one to the right
+    public float diagonalAngle = 30f;    // angle of the first pair; the second pair is twice as wide, and so on
+    public int ricochetBounces = 0;      // how many times each arrow jumps to another enemy after a hit
+
     public Enemy CurrentTarget { get; private set; }
 
     private PlayerMovement movement;
@@ -77,7 +84,28 @@ public class PlayerShooter : MonoBehaviour
 
     void Shoot(Vector3 direction)
     {
-        Vector3 spawnPosition = transform.position + Vector3.up * shootOffset.y + direction * shootOffset.z;
+        // Front arrows: side by side, centered on the aim line.
+        // 'right' points to the player's right; Cross gives the direction at 90 degrees to both vectors.
+        Vector3 right = Vector3.Cross(Vector3.up, direction);
+        for (int i = 0; i < frontArrows; i++)
+        {
+            // 1 arrow: offset 0. 2 arrows: -0.5 and +0.5 spacing. 3 arrows: -1, 0, +1 spacing...
+            float offset = (i - (frontArrows - 1) / 2f) * frontArrowSpacing;
+            SpawnArrow(direction, right * offset);
+        }
+
+        // Diagonal arrows: turn the aim direction left and right around the up axis
+        for (int pair = 1; pair <= diagonalPairs; pair++)
+        {
+            float angle = pair * diagonalAngle;
+            SpawnArrow(Quaternion.Euler(0f, angle, 0f) * direction, Vector3.zero);
+            SpawnArrow(Quaternion.Euler(0f, -angle, 0f) * direction, Vector3.zero);
+        }
+    }
+
+    void SpawnArrow(Vector3 direction, Vector3 sideOffset)
+    {
+        Vector3 spawnPosition = transform.position + Vector3.up * shootOffset.y + direction * shootOffset.z + sideOffset;
         Quaternion spawnRotation = Quaternion.LookRotation(direction);
 
         Arrow arrow;
@@ -85,6 +113,7 @@ public class PlayerShooter : MonoBehaviour
         else arrow = CreateSimpleArrow(spawnPosition, spawnRotation);
 
         arrow.damage = damage;
+        arrow.bounces = ricochetBounces;
     }
 
     // Placeholder arrow until we have a real model: a thin stretched cube

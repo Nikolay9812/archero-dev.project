@@ -8,6 +8,10 @@ public class Arrow : MonoBehaviour
     public float speed = 20f;
     public int damage = 25;
     public float lifetime = 3f; // seconds before a missed arrow is removed
+    public int bounces = 0;          // Ricochet skill: jumps to another enemy this many times
+    public float bounceRange = 7f;   // only jumps to enemies this close
+
+    private Enemy lastHit; // the enemy we just bounced off, so we don't hit it again right away
 
     void Awake()
     {
@@ -37,9 +41,42 @@ public class Arrow : MonoBehaviour
 
         // Ignore everything else that isn't an enemy (the player, the floor, other arrows)
         Enemy enemy = other.GetComponentInParent<Enemy>();
-        if (enemy == null || enemy.IsDead) return;
+        if (enemy == null || enemy.IsDead || enemy == lastHit) return;
 
         enemy.TakeDamage(damage);
+
+        // Ricochet: fly on to the next enemy instead of disappearing
+        if (bounces > 0 && BounceAwayFrom(enemy)) return;
+
         Destroy(gameObject);
+    }
+
+    // Turns the arrow towards the nearest other enemy. Returns false if there is none in range.
+    bool BounceAwayFrom(Enemy hitEnemy)
+    {
+        Enemy next = null;
+        float nearestDistance = bounceRange * bounceRange; // squared, like in PlayerShooter
+
+        foreach (Enemy other in Enemy.All)
+        {
+            if (other == hitEnemy || other.IsDead) continue;
+
+            float distance = (other.transform.position - transform.position).sqrMagnitude;
+            if (distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                next = other;
+            }
+        }
+
+        if (next == null) return false;
+
+        bounces--;
+        lastHit = hitEnemy;
+
+        Vector3 toNext = next.transform.position - transform.position;
+        toNext.y = 0f; // stay at the same height
+        transform.rotation = Quaternion.LookRotation(toNext);
+        return true;
     }
 }
