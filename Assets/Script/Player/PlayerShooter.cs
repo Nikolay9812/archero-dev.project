@@ -9,6 +9,7 @@ public class PlayerShooter : MonoBehaviour
     // If left empty, a simple stick-shaped arrow is created by code.
     public Arrow arrowPrefab;
 
+    public int damage = 25;            // given to every arrow we shoot (skills raise it)
     public float fireRate = 2f;        // arrows per second
     public float range = 15f;          // enemies further away are ignored
     public float turnSpeed = 720f;     // degrees per second when turning to aim
@@ -79,12 +80,15 @@ public class PlayerShooter : MonoBehaviour
         Vector3 spawnPosition = transform.position + Vector3.up * shootOffset.y + direction * shootOffset.z;
         Quaternion spawnRotation = Quaternion.LookRotation(direction);
 
-        if (arrowPrefab != null) Instantiate(arrowPrefab, spawnPosition, spawnRotation);
-        else CreateSimpleArrow(spawnPosition, spawnRotation);
+        Arrow arrow;
+        if (arrowPrefab != null) arrow = Instantiate(arrowPrefab, spawnPosition, spawnRotation);
+        else arrow = CreateSimpleArrow(spawnPosition, spawnRotation);
+
+        arrow.damage = damage;
     }
 
     // Placeholder arrow until we have a real model: a thin stretched cube
-    void CreateSimpleArrow(Vector3 position, Quaternion rotation)
+    Arrow CreateSimpleArrow(Vector3 position, Quaternion rotation)
     {
         GameObject arrow = GameObject.CreatePrimitive(PrimitiveType.Cube);
         arrow.name = "Arrow";
@@ -93,7 +97,7 @@ public class PlayerShooter : MonoBehaviour
         arrow.GetComponent<Renderer>().material.color = new Color(1f, 0.85f, 0.3f);
 
         arrow.AddComponent<Rigidbody>();
-        arrow.AddComponent<Arrow>();
+        return arrow.AddComponent<Arrow>();
     }
 
     // Shows the shooting range in the Scene view when the player is selected

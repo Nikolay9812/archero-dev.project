@@ -408,6 +408,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2101363881}
+    - targetCorrespondingSourceObject: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2101363882}
+    - targetCorrespondingSourceObject: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2101363884}
   m_SourcePrefab: {fileID: 100100000, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
 --- !u!1 &33591413
 GameObject:
@@ -1836,6 +1842,8 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 0.45, b: 0.4, a: 1}
   hitFlashColor: {r: 0.4490565, g: 0.03643285, b: 0.08722718, a: 1}
   hitFlashTime: 0.1
+  xpOrbs: 3
+  xpPerOrb: 5
 --- !u!136 &771989511
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2127,6 +2135,53 @@ Transform:
   - {fileID: 2014925073}
   m_Father: {fileID: 988982245}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &853929135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 853929137}
+  - component: {fileID: 853929136}
+  m_Layer: 0
+  m_Name: XpBar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &853929136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853929135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d007b0e6b6b16146b62f816125f0f2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::XpBar
+  barColor: {r: 0.3, g: 0.9, b: 1, a: 1}
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0.6}
+  levelUpMessageTime: 1.2
+--- !u!4 &853929137
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853929135}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.64714, y: 2, z: 17.58394}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &879824689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2324,6 +2379,8 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 0.45, b: 0.4, a: 1}
   hitFlashColor: {r: 0.4490565, g: 0.03643285, b: 0.08722718, a: 1}
   hitFlashTime: 0.1
+  xpOrbs: 3
+  xpPerOrb: 5
 --- !u!136 &931873164
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3117,6 +3174,74 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245886535}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1250149415
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1250149417}
+  - component: {fileID: 1250149416}
+  m_Layer: 0
+  m_Name: 'SkillChoiceScreen '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1250149416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250149415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5529c5d013ed6ca4aa310ba7cf64e23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillChoiceScreen
+  cardCount: 3
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.75}
+  cardColor: {r: 0.2, g: 0.35, b: 0.6, a: 1}
+  skills:
+  - title: Attack Boost
+    description: +20% damage
+    type: 0
+    amount: 0.2
+  - title: Quick Shot
+    description: +15% attack speed
+    type: 1
+    amount: 0.15
+  - title: Vitality
+    description: +20% max HP
+    type: 2
+    amount: 0.2
+  - title: Heal
+    description: Restore 40% HP
+    type: 3
+    amount: 0.4
+  - title: Swift Feet
+    description: +10% move speed
+    type: 4
+    amount: 0.1
+--- !u!4 &1250149417
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250149415}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.64714, y: 2, z: 17.58394}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1289901098
 GameObject:
   m_ObjectHideFlags: 0
@@ -3215,6 +3340,8 @@ MonoBehaviour:
   bodyColor: {r: 0.7, g: 0.45, b: 1, a: 1}
   hitFlashColor: {r: 0.4490565, g: 0.03643285, b: 0.08722718, a: 1}
   hitFlashTime: 0.1
+  xpOrbs: 3
+  xpPerOrb: 5
 --- !u!136 &1289901103
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -3456,6 +3583,8 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 0.45, b: 0.4, a: 1}
   hitFlashColor: {r: 0.4490565, g: 0.03643285, b: 0.08722718, a: 1}
   hitFlashTime: 0.1
+  xpOrbs: 3
+  xpPerOrb: 5
 --- !u!136 &1542938470
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4053,6 +4182,8 @@ MonoBehaviour:
   bodyColor: {r: 1, g: 0.45, b: 0.4, a: 1}
   hitFlashColor: {r: 0.4490565, g: 0.03643285, b: 0.08722718, a: 1}
   hitFlashTime: 0.1
+  xpOrbs: 3
+  xpPerOrb: 5
 --- !u!136 &1740889006
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4461,6 +4592,8 @@ MonoBehaviour:
   bodyColor: {r: 0.7, g: 0.45, b: 1, a: 1}
   hitFlashColor: {r: 0.4490565, g: 0.03643285, b: 0.08722718, a: 1}
   hitFlashTime: 0.1
+  xpOrbs: 3
+  xpPerOrb: 5
 --- !u!136 &1953728557
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -4793,6 +4926,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShooter
   arrowPrefab: {fileID: 0}
+  damage: 25
   fireRate: 2
   range: 15
   turnSpeed: 720
@@ -4830,6 +4964,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimation
   animator: {fileID: 0}
   blendTime: 0.1
+--- !u!114 &2101363882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101363873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80ec2e892949018468d0e4fe62ab9e08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerXp
+  xpForLevel2: 20
+  xpIncrease: 10
+--- !u!114 &2101363884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101363873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a400290caf24f454ca3df80aaa1cbaae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSkills
 --- !u!1 &2127418232
 GameObject:
   m_ObjectHideFlags: 0
@@ -4952,3 +5112,5 @@ SceneRoots:
   - {fileID: 1715332847}
   - {fileID: 887875314}
   - {fileID: 1516839280}
+  - {fileID: 853929137}
+  - {fileID: 1250149417}

@@ -74,6 +74,21 @@ public class PlayerHealth : MonoBehaviour
         else invincibleTimer = invincibleTime;
     }
 
+    public void Heal(int amount)
+    {
+        if (IsDead) return;
+
+        CurrentHealth = Mathf.Min(CurrentHealth + amount, maxHealth); // never above max
+        UpdateBar();
+    }
+
+    // More max HP, and the new HP is filled straight away (300/300 -> 360/360, 100/300 -> 160/360)
+    public void IncreaseMaxHealth(int amount)
+    {
+        maxHealth += amount;
+        Heal(amount);
+    }
+
     void Die()
     {
         SetVisible(true);

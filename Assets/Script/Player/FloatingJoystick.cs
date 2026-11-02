@@ -31,7 +31,9 @@ public class FloatingJoystick : MonoBehaviour
     {
         // Pointer = mouse on PC, first finger on a phone
         Pointer pointer = Pointer.current;
-        if (pointer == null)
+
+        // Paused (skill choice, Game Over): taps are for the buttons, not for walking
+        if (pointer == null || Time.timeScale == 0f)
         {
             Hide();
             return;
