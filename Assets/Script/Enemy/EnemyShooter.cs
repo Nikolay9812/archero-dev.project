@@ -17,6 +17,8 @@ public class EnemyShooter : MonoBehaviour
     public float windUpTime = 0.5f;
     public int damage = 30;
     public float bulletSpeed = 7f;
+    public int bulletsPerShot = 1;       // more than 1 = a fan of bullets ("spread shooter")
+    public float spreadAngle = 50f;      // width of the fan in degrees, from the leftmost to the rightmost bullet
     public Color bulletColor = new Color(1f, 0.3f, 0.9f);
     public float shootHeight = 1f;
 
@@ -103,6 +105,19 @@ public class EnemyShooter : MonoBehaviour
         direction.y = 0f;
         direction.Normalize();
 
+        for (int i = 0; i < bulletsPerShot; i++)
+        {
+            // Spread the bullets evenly across the fan. With 3 bullets and 50°: -25°, 0°, +25°.
+            // (i / (bulletsPerShot - 1f)) goes from 0 to 1, Lerp turns that into an angle.
+            float angle = 0f;
+            if (bulletsPerShot > 1) angle = Mathf.Lerp(-spreadAngle / 2f, spreadAngle / 2f, i / (bulletsPerShot - 1f));
+
+            SpawnBullet(Quaternion.Euler(0f, angle, 0f) * direction);
+        }
+    }
+
+    void SpawnBullet(Vector3 direction)
+    {
         Vector3 spawnPosition = new Vector3(transform.position.x, shootHeight, transform.position.z) + direction * 0.7f;
         Quaternion spawnRotation = Quaternion.LookRotation(direction);
 

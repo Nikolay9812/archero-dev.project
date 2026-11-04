@@ -65,6 +65,16 @@ public class Enemy : MonoBehaviour
         if (agent.isOnNavMesh) agent.isStopped = true;
     }
 
+    // Moves straight by 'offset' right now, without path finding (used for dashes).
+    // agent.Move keeps us on the NavMesh, so we slide along walls instead of going through them.
+    public void Push(Vector3 offset)
+    {
+        if (agent.isOnNavMesh) agent.Move(offset);
+    }
+
+    // The agent floats 'baseOffset' above the NavMesh, so this is the point on the floor under us
+    public Vector3 FloorPosition => transform.position - Vector3.up * agent.baseOffset;
+
     // Turns to face a point on the ground (no tilting)
     public void TurnTowards(Vector3 point, float turnSpeed)
     {
@@ -107,11 +117,9 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        // The agent floats 'baseOffset' above the NavMesh, so this is the point on the floor under us
-        Vector3 floor = transform.position - Vector3.up * agent.baseOffset;
         for (int i = 0; i < xpOrbs; i++)
         {
-            XpOrb.Spawn(floor + Vector3.up * 0.3f, xpPerOrb, 1.2f);
+            XpOrb.Spawn(FloorPosition + Vector3.up * 0.3f, xpPerOrb, 1.2f);
         }
 
         // Later: death animation, coins...
