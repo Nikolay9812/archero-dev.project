@@ -43,6 +43,12 @@ public class SkillChoiceScreen : MonoBehaviour
 
     void OnLeveledUp(int newLevel)
     {
+        OfferSkill();
+    }
+
+    // Shows the skill cards. A level-up calls this, and so does the skill reward in a rest room.
+    public void OfferSkill()
+    {
         choicesWaiting++;
         if (!panel.activeSelf) ShowCards();
     }
