@@ -119,27 +119,7 @@ public class EnemyShooter : MonoBehaviour
     void SpawnBullet(Vector3 direction)
     {
         Vector3 spawnPosition = new Vector3(transform.position.x, shootHeight, transform.position.z) + direction * 0.7f;
-        Quaternion spawnRotation = Quaternion.LookRotation(direction);
-
-        EnemyBullet bullet = bulletPrefab != null
-            ? Instantiate(bulletPrefab, spawnPosition, spawnRotation)
-            : CreateSimpleBullet(spawnPosition, spawnRotation);
-
-        bullet.speed = bulletSpeed;
-        bullet.damage = damage;
-    }
-
-    // Placeholder bullet until we have a real effect: a small colored sphere
-    EnemyBullet CreateSimpleBullet(Vector3 position, Quaternion rotation)
-    {
-        GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        ball.name = "EnemyBullet";
-        ball.transform.SetPositionAndRotation(position, rotation);
-        ball.transform.localScale = Vector3.one * 0.35f;
-        ball.GetComponent<Renderer>().material.color = bulletColor;
-
-        ball.AddComponent<Rigidbody>();
-        return ball.AddComponent<EnemyBullet>();
+        EnemyBullet.Spawn(bulletPrefab, spawnPosition, direction, bulletSpeed, damage, bulletColor);
     }
 
     void OnDrawGizmosSelected()

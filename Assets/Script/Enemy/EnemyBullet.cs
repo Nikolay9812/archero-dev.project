@@ -1,13 +1,42 @@
 using UnityEngine;
 
 // A slow enemy bullet that flies straight, hurts the player on touch and then disappears.
-// EnemyShooter creates these, so you normally never place this in the scene yourself.
+// EnemyShooter and EnemyBoss create these with EnemyBullet.Spawn, so you never place one in the scene yourself.
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyBullet : MonoBehaviour
 {
     public float speed = 7f;
     public int damage = 30;
     public float lifetime = 4f;
+
+    // Creates one bullet flying in 'direction'. Any enemy can call this.
+    // 'prefab' may be null: then a simple glowing ball in 'color' is made by code.
+    // "static" means it belongs to the class, not to one bullet, so we can call it before any bullet exists.
+    public static EnemyBullet Spawn(EnemyBullet prefab, Vector3 position, Vector3 direction, float speed, int damage, Color color)
+    {
+        Quaternion rotation = Quaternion.LookRotation(direction);
+
+        EnemyBullet bullet = prefab != null
+            ? Instantiate(prefab, position, rotation)
+            : CreateSimpleBullet(position, rotation, color);
+
+        bullet.speed = speed;
+        bullet.damage = damage;
+        return bullet;
+    }
+
+    // Placeholder bullet until we have a real effect: a small colored sphere
+    static EnemyBullet CreateSimpleBullet(Vector3 position, Quaternion rotation, Color color)
+    {
+        GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        ball.name = "EnemyBullet";
+        ball.transform.SetPositionAndRotation(position, rotation);
+        ball.transform.localScale = Vector3.one * 0.35f;
+        ball.GetComponent<Renderer>().material.color = color;
+
+        ball.AddComponent<Rigidbody>();
+        return ball.AddComponent<EnemyBullet>();
+    }
 
     void Awake()
     {

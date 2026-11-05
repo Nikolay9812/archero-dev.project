@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -21,10 +22,14 @@ public class Enemy : MonoBehaviour
     // so we don't need tags or FindObjectsByType every frame.
     public static readonly List<Enemy> All = new List<Enemy>();
 
+    // Fired every time this enemy takes damage (the boss health bar listens to it)
+    public event Action HealthChanged;
+
     public int CurrentHealth { get; private set; }
     public bool IsDead => CurrentHealth <= 0;
 
     private NavMeshAgent agent;
+    private float normalBaseOffset;
     private Renderer[] renderers;
     private Color[] originalColors;
     private float flashTimer;
@@ -37,6 +42,7 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.acceleration = 40f; // start and stop quickly instead of sliding
+        normalBaseOffset = agent.baseOffset;
 
         // Remember the normal colors so we can flash and then go back
         renderers = GetComponentsInChildren<Renderer>();
@@ -70,6 +76,13 @@ public class Enemy : MonoBehaviour
     public void Push(Vector3 offset)
     {
         if (agent.isOnNavMesh) agent.Move(offset);
+    }
+
+    // Lifts the body 'height' meters above its normal height (used for the boss jump).
+    // The agent keeps walking on the NavMesh underneath; only the body goes up. Lift(0) = back down.
+    public void Lift(float height)
+    {
+        agent.baseOffset = normalBaseOffset + height;
     }
 
     // The agent floats 'baseOffset' above the NavMesh, so this is the point on the floor under us
@@ -111,6 +124,7 @@ public class Enemy : MonoBehaviour
         CurrentHealth -= amount;
         flashTimer = hitFlashTime;
         SetColor(hitFlashColor);
+        HealthChanged?.Invoke();
 
         if (IsDead) Die();
     }
