@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ChapterData
   chapterName: Chapter 1
   rooms:
+  - {fileID: 5091625455786217931, guid: e3879ae100b61414c96d3ef50099414d, type: 3}
   - {fileID: 5091625455786217931, guid: 06a578dc42d3bf84b9336ba809946467, type: 3}
   - {fileID: 5091625455786217931, guid: 1fd705dfd42a3074fbbf8b662ececcc6, type: 3}
   - {fileID: 5091625455786217931, guid: 15caf8a6cd973ee498ad5ebbf1018b0e, type: 3}

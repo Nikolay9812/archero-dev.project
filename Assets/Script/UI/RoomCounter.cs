@@ -26,7 +26,9 @@ public class RoomCounter : MonoBehaviour
 
     void OnRoomStarted(int roomNumber, int roomCount)
     {
-        label.text = roomNumber + " / " + roomCount;
+        // Room 0 is the start room: show nothing there
+        if (roomNumber == 0) label.text = "";
+        else label.text = roomNumber + " / " + roomCount;
     }
 
     void BuildUI()

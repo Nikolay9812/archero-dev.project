@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Shows how many coins the player owns, at the top right under the XP bar.
+// Shows the coins collected during this run, at the top right under the XP bar.
+// The totals the player owns are only shown in the main menu.
 // It builds its own UI when the game starts, so you only need to add this component to an empty GameObject.
 // It only listens to Wallet.Changed.
 public class CoinCounter : MonoBehaviour
@@ -28,7 +29,7 @@ public class CoinCounter : MonoBehaviour
 
     void UpdateLabel()
     {
-        label.text = "Coins: " + Wallet.Coins;
+        label.text = "Coins: " + Wallet.EarnedThisRun;
     }
 
     void BuildUI()

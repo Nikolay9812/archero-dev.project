@@ -538,6 +538,8 @@ MonoBehaviour:
   showDelay: 1
   overlayColor: {r: 0, g: 0, b: 0, a: 0.7}
   buttonColor: {r: 0.95, g: 0.65, b: 0.15, a: 1}
+  menuButtonColor: {r: 0.35, g: 0.4, b: 0.5, a: 1}
+  menuSceneName: MainMenu
 --- !u!4 &887875314
 Transform:
   m_ObjectHideFlags: 0
@@ -594,6 +596,55 @@ MonoBehaviour:
   chapter: {fileID: 11400000, guid: 01400f8915d89dd488c7a10c1b64e3b4, type: 2}
   roomPosition: {x: 0, y: 0, z: 0}
   fallLimit: -5
+--- !u!1 &1104927664
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1104927666}
+  - component: {fileID: 1104927665}
+  m_Layer: 0
+  m_Name: PauseMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1104927665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104927664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d0c805086eb4f343b6cc0ec690254c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
+  menuSceneName: MainMenu
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.8}
+  pauseButtonColor: {r: 0, g: 0, b: 0, a: 0.5}
+  resumeButtonColor: {r: 0.95, g: 0.65, b: 0.15, a: 1}
+  quitButtonColor: {r: 0.35, g: 0.4, b: 0.5, a: 1}
+--- !u!4 &1104927666
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1104927664}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.00321, y: 0.89073, z: -6.22298}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1137767180
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,3 +1019,4 @@ SceneRoots:
   - {fileID: 1250149417}
   - {fileID: 1137767182}
   - {fileID: 1984208544}
+  - {fileID: 1104927666}

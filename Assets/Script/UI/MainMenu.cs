@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// The first screen of the game: title, the player's coins and a PLAY button.
+// The first screen of the game: title, the player's profile level, coins and gems, and a PLAY button.
 // It builds its own UI when the game starts, so you only need to add this component to an empty GameObject.
 public class MainMenu : MonoBehaviour
 {
@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     public string gameSceneName = "Game"; // must be in the Build Profile's scene list
     public Color backgroundColor = new Color(0.13f, 0.17f, 0.25f);
     public Color titleColor = Color.white;
+    public Color profileColor = new Color(0.4f, 1f, 0.4f);
     public Color coinsColor = new Color(1f, 0.8f, 0.15f);
     public Color buttonColor = new Color(0.95f, 0.65f, 0.15f);
 
@@ -52,7 +53,11 @@ public class MainMenu : MonoBehaviour
         Text title = UiBuilder.CreateText("Title", panel.transform, gameTitle, 130, new Vector2(0f, 400f), new Vector2(1000f, 220f));
         title.color = titleColor;
 
-        Text coins = UiBuilder.CreateText("Coins", panel.transform, "Coins: " + Wallet.Coins, 60, new Vector2(0f, 180f), new Vector2(1000f, 90f));
+        string profile = "Level " + PlayerProfile.Level + "   (" + PlayerProfile.Xp + " / " + PlayerProfile.XpToNextLevel + " XP)";
+        Text profileText = UiBuilder.CreateText("Profile", panel.transform, profile, 60, new Vector2(0f, 230f), new Vector2(1000f, 90f));
+        profileText.color = profileColor;
+
+        Text coins = UiBuilder.CreateText("Coins", panel.transform, "Coins: " + Wallet.Coins + "   Gems: " + Wallet.Gems, 60, new Vector2(0f, 130f), new Vector2(1000f, 90f));
         coins.color = coinsColor;
 
         UiBuilder.CreateButton("PlayButton", panel.transform, "PLAY", new Vector2(0f, -100f), new Vector2(560f, 180f), buttonColor, Play);

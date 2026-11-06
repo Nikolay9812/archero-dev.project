@@ -39,10 +39,14 @@ public class FloatingJoystick : MonoBehaviour
             return;
         }
 
-        Vector2 localPoint = ScreenToCanvas(pointer.position.ReadValue());
+        Vector2 screenPosition = pointer.position.ReadValue();
+        Vector2 localPoint = ScreenToCanvas(screenPosition);
 
         if (pointer.press.wasPressedThisFrame)
         {
+            // Tapping the pause button shouldn't make the player walk
+            if (PauseMenu.IsOverPauseButton(screenPosition)) return;
+
             // Finger down: place the joystick right here
             isHeld = true;
             startPosition = localPoint;

@@ -13,8 +13,11 @@ public class ChapterManager : MonoBehaviour
     public float fallLimit = -5f; // safety net: below this height the player is put back at the room's start
 
     // RoomCounter listens to RoomStarted, GameOverScreen to ChapterCleared
-    public static event Action<int, int> RoomStarted; // (room number starting at 1, number of rooms)
+    public static event Action<int, int> RoomStarted; // (room number, 0 in the start room; number of rooms)
     public static event Action ChapterCleared;
+
+    // True while the player is in the chapter's final room. Enemy reads this.
+    public static bool IsLastRoom { get; private set; }
 
     private Room currentRoom;
     private int roomIndex = -1;    // -1 = no room loaded yet
@@ -39,6 +42,7 @@ public class ChapterManager : MonoBehaviour
         }
 
         Wallet.StartRun();
+        PlayerProfile.StartRun();
         StartCoroutine(GoToRoom(0));
     }
 
@@ -59,6 +63,8 @@ public class ChapterManager : MonoBehaviour
         bool wasLastRoom = roomIndex + 1 >= chapter.rooms.Count;
         if (wasLastRoom)
         {
+            changingRoom = true; // so the reward can never be given twice
+            PlayerProfile.AddXp(chapter.profileXpReward);
             ChapterCleared?.Invoke();
             return;
         }
@@ -84,11 +90,15 @@ public class ChapterManager : MonoBehaviour
         }
 
         roomIndex = index;
+        IsLastRoom = index == chapter.rooms.Count - 1;
         currentRoom = Instantiate(chapter.rooms[index], roomPosition, Quaternion.identity);
         currentRoom.name = chapter.rooms[index].name; // without "(Clone)"
 
         MovePlayerToStart();
-        RoomStarted?.Invoke(roomIndex + 1, chapter.rooms.Count);
+
+        // The start room doesn't count, so it is number 0 and the first fight is "1 / 10"
+        int skippedRooms = chapter.firstRoomIsStartRoom ? 1 : 0;
+        RoomStarted?.Invoke(roomIndex + 1 - skippedRooms, chapter.rooms.Count - skippedRooms);
 
         if (fader != null) yield return fader.FadeIn();
 

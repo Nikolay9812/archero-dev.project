@@ -3,11 +3,15 @@ using System.IO;
 using UnityEngine;
 
 // Everything that must survive closing the game. To save something new later, just add a field here.
-// [Serializable] lets JsonUtility turn this class into text and back. The file looks like: {"coins":120}
+// [Serializable] lets JsonUtility turn this class into text and back. The file looks like: {"coins":120,"gems":3}
+// An older save file without a field just keeps the starting value written here (0 if none is written).
 [Serializable]
 public class SaveData
 {
     public int coins;
+    public int gems;
+    public int profileLevel = 1;
+    public int profileXp;
 }
 
 // Reads and writes the save file. "static" = there is only one, it needs no GameObject,

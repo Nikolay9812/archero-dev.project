@@ -135,9 +135,14 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        for (int i = 0; i < xpOrbs; i++)
+        // Orbs only fly to the player once the room is cleared. In the last room the chapter is over
+        // by then, so a level up (and its skill cards) would be pointless: drop no XP there.
+        if (!ChapterManager.IsLastRoom)
         {
-            XpOrb.Spawn(FloorPosition + Vector3.up * 0.3f, xpPerOrb, 1.2f);
+            for (int i = 0; i < xpOrbs; i++)
+            {
+                XpOrb.Spawn(FloorPosition + Vector3.up * 0.3f, xpPerOrb, 1.2f);
+            }
         }
 
         for (int i = 0; i < coinDrops; i++)
