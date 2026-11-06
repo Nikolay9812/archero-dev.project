@@ -145,9 +145,12 @@ public class Enemy : MonoBehaviour
             }
         }
 
+        // The Coin Bonus talent makes each coin worth more. 100 + 20 = 120% of the normal value.
+        int valueWithBonus = Mathf.RoundToInt(coinValue * (100 + Upgrades.CoinBonusPercent) / 100f);
+
         for (int i = 0; i < coinDrops; i++)
         {
-            Coin.Spawn(FloorPosition + Vector3.up * 0.3f, coinValue, 1.2f);
+            Coin.Spawn(FloorPosition + Vector3.up * 0.3f, valueWithBonus, 1.2f);
         }
 
         // Later: death animation...

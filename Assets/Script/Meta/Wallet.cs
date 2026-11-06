@@ -33,6 +33,18 @@ public static class Wallet
         Changed?.Invoke();
     }
 
+    // Returns false, and takes nothing, if the player doesn't have enough coins
+    public static bool Spend(int amount)
+    {
+        if (Coins < amount) return false;
+
+        SaveSystem.Data.coins -= amount;
+        SaveSystem.Save();
+
+        Changed?.Invoke();
+        return true;
+    }
+
     public static void AddGems(int amount)
     {
         SaveSystem.Data.gems += amount;
@@ -41,5 +53,17 @@ public static class Wallet
         SaveSystem.Save();
 
         Changed?.Invoke();
+    }
+
+    // Returns false, and takes nothing, if the player doesn't have enough gems
+    public static bool SpendGems(int amount)
+    {
+        if (Gems < amount) return false;
+
+        SaveSystem.Data.gems -= amount;
+        SaveSystem.Save();
+
+        Changed?.Invoke();
+        return true;
     }
 }

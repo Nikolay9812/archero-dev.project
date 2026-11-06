@@ -12,6 +12,18 @@ public class SaveData
     public int gems;
     public int profileLevel = 1;
     public int profileXp;
+
+    // Levels of the talents on the Collectible page (see Upgrades)
+    public int attackUpgrade;
+    public int healthUpgrade;
+    public int speedUpgrade;
+    public int moveUpgrade;
+    public int roomHealUpgrade;
+    public int coinUpgrade;
+
+    // Items bought with gems in the shop (see GemShop)
+    public bool ownsExtraArrow;
+    public bool ownsRevive;
 }
 
 // Reads and writes the save file. "static" = there is only one, it needs no GameObject,

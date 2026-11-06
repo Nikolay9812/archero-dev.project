@@ -9,6 +9,7 @@ public class ChapterData : ScriptableObject
 {
     public string chapterName = "Chapter 1";
     public int profileXpReward = 100; // permanent XP for finishing this chapter
+    public int gemReward = 5;         // gems for finishing this chapter
     public bool firstRoomIsStartRoom = true; // true = the room counter doesn't count the first room
     public List<Room> rooms = new List<Room>();
 }

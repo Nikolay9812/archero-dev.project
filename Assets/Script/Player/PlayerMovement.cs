@@ -30,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         if (joystick == null) joystick = FindAnyObjectByType<FloatingJoystick>();
+
+        speed += Upgrades.BonusMoveSpeed; // permanent talent from the Collectible page
     }
 
     void OnEnable()

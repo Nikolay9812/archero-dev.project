@@ -31,6 +31,13 @@ public class PlayerShooter : MonoBehaviour
     void Awake()
     {
         movement = GetComponent<PlayerMovement>();
+
+        // Permanent talents from the Collectible page
+        damage += Upgrades.BonusDamage;
+        fireRate += Upgrades.BonusFireRate;
+
+        // Bought with gems in the shop
+        if (GemShop.Owns(GemItem.ExtraArrow)) frontArrows++;
     }
 
     void Update()

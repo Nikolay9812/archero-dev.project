@@ -65,6 +65,7 @@ public class ChapterManager : MonoBehaviour
         {
             changingRoom = true; // so the reward can never be given twice
             PlayerProfile.AddXp(chapter.profileXpReward);
+            Wallet.AddGems(chapter.gemReward);
             ChapterCleared?.Invoke();
             return;
         }
@@ -95,6 +96,9 @@ public class ChapterManager : MonoBehaviour
         currentRoom.name = chapter.rooms[index].name; // without "(Clone)"
 
         MovePlayerToStart();
+
+        // The Room Heal talent. At full HP (like in the first room) this does nothing.
+        if (PlayerHealth.Instance != null) PlayerHealth.Instance.Heal(Upgrades.RoomHeal);
 
         // The start room doesn't count, so it is number 0 and the first fight is "1 / 10"
         int skippedRooms = chapter.firstRoomIsStartRoom ? 1 : 0;

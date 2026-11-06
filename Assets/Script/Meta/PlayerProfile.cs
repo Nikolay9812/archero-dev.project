@@ -6,6 +6,9 @@ public static class PlayerProfile
     public static int Xp => SaveSystem.Data.profileXp;
     public static int XpToNextLevel => 100 + (Level - 1) * 50; // level 1: 100, level 2: 150, level 3: 200...
 
+    public const int ShopUnlockLevel = 3;
+    public static bool IsShopUnlocked => Level >= ShopUnlockLevel;
+
     // Earned since the chapter started (GameOverScreen shows this at the end)
     public static int XpEarnedThisRun { get; private set; }
 

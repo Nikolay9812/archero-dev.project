@@ -47,6 +47,51 @@ public static class UiBuilder
         return panel;
     }
 
+    // The part of the screen not covered by a phone's notch or rounded corners. Put header and footer in here.
+    public static RectTransform CreateSafeArea(Transform parent)
+    {
+        GameObject area = new GameObject("SafeArea", typeof(RectTransform));
+        area.transform.SetParent(parent, false);
+
+        // Screen.safeArea is in pixels, anchors go from 0 to 1 across the screen
+        Rect safe = Screen.safeArea;
+        RectTransform rect = area.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(safe.xMin / Screen.width, safe.yMin / Screen.height);
+        rect.anchorMax = new Vector2(safe.xMax / Screen.width, safe.yMax / Screen.height);
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+
+        return rect;
+    }
+
+    // A bar across the whole width of the parent, stuck to its top or bottom edge
+    public static RectTransform CreateEdgeBar(string name, Transform parent, bool atTop, float height, Color color)
+    {
+        RectTransform rect = CreateBox(name, parent, color, Vector2.zero, Vector2.zero).rectTransform;
+
+        float edge = atTop ? 1f : 0f;
+        rect.anchorMin = new Vector2(0f, edge);
+        rect.anchorMax = new Vector2(1f, edge);
+        rect.pivot = new Vector2(0.5f, edge);
+        rect.sizeDelta = new Vector2(0f, height); // x = 0: exactly as wide as the anchors
+        rect.anchoredPosition = Vector2.zero;
+
+        return rect;
+    }
+
+    // A plain colored rectangle. Position is measured from the middle of the parent.
+    public static Image CreateBox(string name, Transform parent, Color color, Vector2 position, Vector2 size)
+    {
+        GameObject box = new GameObject(name, typeof(Image));
+        box.transform.SetParent(parent, false);
+
+        Image image = box.GetComponent<Image>();
+        image.color = color;
+        image.rectTransform.sizeDelta = size;
+        image.rectTransform.anchoredPosition = position;
+
+        return image;
+    }
+
     // Position is measured from the middle of the parent
     public static Text CreateText(string name, Transform parent, string content, int fontSize, Vector2 position, Vector2 size)
     {
