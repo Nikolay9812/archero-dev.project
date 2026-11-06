@@ -135,6 +135,8 @@ MonoBehaviour:
   hitFlashTime: 0.1
   xpOrbs: 10
   xpPerOrb: 10
+  coinDrops: 10
+  coinValue: 10
 --- !u!195 &5917781801180226879
 NavMeshAgent:
   m_ObjectHideFlags: 0

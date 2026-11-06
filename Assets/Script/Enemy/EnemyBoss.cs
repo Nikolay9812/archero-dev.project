@@ -77,6 +77,8 @@ public class EnemyBoss : MonoBehaviour
         enemy.bodyColor = new Color(0.8f, 0.3f, 0.3f);
         enemy.xpOrbs = 10;
         enemy.xpPerOrb = 10;
+        enemy.coinDrops = 10;
+        enemy.coinValue = 10;
     }
 
     // Start can be a coroutine too! It begins when the room wakes the boss up and runs the whole fight.

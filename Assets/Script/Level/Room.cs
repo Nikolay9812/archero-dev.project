@@ -57,7 +57,7 @@ public class Room : MonoBehaviour
         // (A room with no enemies at all is cleared straight away)
         IsCleared = true;
         if (exitDoor != null) exitDoor.Open();
-        XpOrb.CollectAll(); // the reward: all XP on the floor flies to the player
+        Pickup.CollectAll(); // the reward: all XP and coins on the floor fly to the player
     }
 
     // In the prefab the "Enemies" object is unticked, so the enemies don't wake up before

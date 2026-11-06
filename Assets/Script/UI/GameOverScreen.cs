@@ -15,6 +15,7 @@ public class GameOverScreen : MonoBehaviour
 
     private GameObject panel;
     private Text titleText;
+    private Text coinsText;
     private Text buttonText;
 
     void Awake()
@@ -54,6 +55,7 @@ public class GameOverScreen : MonoBehaviour
     void Show(string title, string buttonLabel)
     {
         titleText.text = title;
+        coinsText.text = "+" + Wallet.EarnedThisRun + " coins";
         buttonText.text = buttonLabel;
         panel.SetActive(true);
         Time.timeScale = 0f; // freeze enemies and bullets
@@ -111,6 +113,9 @@ public class GameOverScreen : MonoBehaviour
         Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
 
         titleText = CreateText("Title", panel.transform, font, "GAME OVER", 120, new Vector2(0f, 200f), new Vector2(1000f, 160f));
+
+        coinsText = CreateText("Coins", panel.transform, font, "", 56, new Vector2(0f, 60f), new Vector2(1000f, 80f));
+        coinsText.color = new Color(1f, 0.8f, 0.15f);
 
         // Retry button
         GameObject buttonObject = new GameObject("RetryButton", typeof(Image), typeof(Button));

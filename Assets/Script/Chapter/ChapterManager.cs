@@ -38,6 +38,7 @@ public class ChapterManager : MonoBehaviour
             return;
         }
 
+        Wallet.StartRun();
         StartCoroutine(GoToRoom(0));
     }
 

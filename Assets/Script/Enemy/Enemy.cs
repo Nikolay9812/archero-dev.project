@@ -18,6 +18,10 @@ public class Enemy : MonoBehaviour
     public int xpOrbs = 3;
     public int xpPerOrb = 5;
 
+    // Coins dropped on death: this many coins, each worth coinValue
+    public int coinDrops = 2;
+    public int coinValue = 5;
+
     // Every living enemy in the scene. The player's auto-shoot looks here for the nearest target,
     // so we don't need tags or FindObjectsByType every frame.
     public static readonly List<Enemy> All = new List<Enemy>();
@@ -136,7 +140,12 @@ public class Enemy : MonoBehaviour
             XpOrb.Spawn(FloorPosition + Vector3.up * 0.3f, xpPerOrb, 1.2f);
         }
 
-        // Later: death animation, coins...
+        for (int i = 0; i < coinDrops; i++)
+        {
+            Coin.Spawn(FloorPosition + Vector3.up * 0.3f, coinValue, 1.2f);
+        }
+
+        // Later: death animation...
         Destroy(gameObject);
     }
 
