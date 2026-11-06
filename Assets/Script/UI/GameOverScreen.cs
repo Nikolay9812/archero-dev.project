@@ -1,10 +1,8 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Shows "GAME OVER" with a Retry button when the player dies, and pauses the game.
+// Shows "GAME OVER" with Retry and Menu buttons when the player dies, and pauses the game.
 // Shows "STAGE CLEAR" the same way when ChapterManager says the last room is done.
 // It builds its own UI when the game starts, so you only need to add this component to an empty GameObject.
 public class GameOverScreen : MonoBehaviour
@@ -12,6 +10,8 @@ public class GameOverScreen : MonoBehaviour
     public float showDelay = 1f; // short pause after death so the player sees what happened
     public Color overlayColor = new Color(0f, 0f, 0f, 0.7f);
     public Color buttonColor = new Color(0.95f, 0.65f, 0.15f);
+    public Color menuButtonColor = new Color(0.35f, 0.4f, 0.5f);
+    public string menuSceneName = "MainMenu"; // must be in the Build Profile's scene list
 
     private GameObject panel;
     private Text titleText;
@@ -81,71 +81,26 @@ public class GameOverScreen : MonoBehaviour
         }
     }
 
-    void BuildUI()
+    public void GoToMenu()
     {
-        // Buttons need an EventSystem to receive clicks/taps
-        if (FindAnyObjectByType<EventSystem>() == null)
-        {
-            new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
-        }
-
-        GameObject canvasObject = new GameObject("GameOverCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-        canvasObject.transform.SetParent(transform, false);
-
-        Canvas canvas = canvasObject.GetComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 200; // above the joystick
-
-        CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1080f, 1920f);
-        scaler.matchWidthOrHeight = 0.5f;
-
-        // Dark overlay over the whole screen (also blocks clicks on anything behind it)
-        panel = new GameObject("Panel", typeof(Image));
-        panel.transform.SetParent(canvasObject.transform, false);
-        panel.GetComponent<Image>().color = overlayColor;
-        RectTransform panelRect = panel.GetComponent<RectTransform>();
-        panelRect.anchorMin = Vector2.zero;
-        panelRect.anchorMax = Vector2.one;
-        panelRect.offsetMin = panelRect.offsetMax = Vector2.zero;
-
-        Font font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-
-        titleText = CreateText("Title", panel.transform, font, "GAME OVER", 120, new Vector2(0f, 200f), new Vector2(1000f, 160f));
-
-        coinsText = CreateText("Coins", panel.transform, font, "", 56, new Vector2(0f, 60f), new Vector2(1000f, 80f));
-        coinsText.color = new Color(1f, 0.8f, 0.15f);
-
-        // Retry button
-        GameObject buttonObject = new GameObject("RetryButton", typeof(Image), typeof(Button));
-        buttonObject.transform.SetParent(panel.transform, false);
-        buttonObject.GetComponent<Image>().color = buttonColor;
-        RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
-        buttonRect.sizeDelta = new Vector2(480f, 150f);
-        buttonRect.anchoredPosition = new Vector2(0f, -100f);
-        buttonObject.GetComponent<Button>().onClick.AddListener(Retry);
-
-        buttonText = CreateText("Label", buttonObject.transform, font, "RETRY", 72, Vector2.zero, buttonRect.sizeDelta);
+        Time.timeScale = 1f; // the new scene must not start frozen
+        SceneManager.LoadScene(menuSceneName);
     }
 
-    static Text CreateText(string name, Transform parent, Font font, string content, int fontSize, Vector2 position, Vector2 size)
+    void BuildUI()
     {
-        GameObject textObject = new GameObject(name, typeof(Text));
-        textObject.transform.SetParent(parent, false);
+        Canvas canvas = UiBuilder.CreateCanvas("GameOverCanvas", transform, 200); // 200 = above the joystick
 
-        Text text = textObject.GetComponent<Text>();
-        text.font = font;
-        text.text = content;
-        text.fontSize = fontSize;
-        text.fontStyle = FontStyle.Bold;
-        text.alignment = TextAnchor.MiddleCenter;
-        text.color = Color.white;
-        text.raycastTarget = false;
+        // Dark overlay over the whole screen
+        panel = UiBuilder.CreateFullScreenPanel("Panel", canvas.transform, overlayColor);
 
-        RectTransform rect = text.rectTransform;
-        rect.sizeDelta = size;
-        rect.anchoredPosition = position;
-        return text;
+        titleText = UiBuilder.CreateText("Title", panel.transform, "GAME OVER", 120, new Vector2(0f, 200f), new Vector2(1000f, 160f));
+
+        coinsText = UiBuilder.CreateText("Coins", panel.transform, "", 56, new Vector2(0f, 60f), new Vector2(1000f, 80f));
+        coinsText.color = new Color(1f, 0.8f, 0.15f);
+
+        Vector2 buttonSize = new Vector2(480f, 150f);
+        buttonText = UiBuilder.CreateButton("RetryButton", panel.transform, "RETRY", new Vector2(0f, -100f), buttonSize, buttonColor, Retry);
+        UiBuilder.CreateButton("MenuButton", panel.transform, "MENU", new Vector2(0f, -280f), buttonSize, menuButtonColor, GoToMenu);
     }
 }
