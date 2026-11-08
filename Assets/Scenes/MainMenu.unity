@@ -469,6 +469,8 @@ MonoBehaviour:
   headerColor: {r: 0.09, g: 0.11, b: 0.18, a: 1}
   slotColor: {r: 0.17, g: 0.21, b: 0.32, a: 1}
   chapterCardColor: {r: 0.25, g: 0.4, b: 0.55, a: 1}
+  avatarModel: {fileID: 919132149155446097, guid: 2898358e4fc35854b9ea9e88997de94e, type: 3}
+  avatarAnimator: {fileID: 9100000, guid: ef4c9f9b0487b5e4eb8d7a4ad2779033, type: 2}
 --- !u!4 &1604696099
 Transform:
   m_ObjectHideFlags: 0

@@ -40,10 +40,17 @@ public class PlayerHealth : MonoBehaviour
     {
         Instance = this;
         maxHealth += Upgrades.BonusHealth; // permanent talent from the Collectible page
+        maxHealth += Inventory.BonusInt(GearStat.MaxHealth); // worn gear
         CurrentHealth = maxHealth;
-        renderers = GetComponentsInChildren<Renderer>();
         BuildBar();
         UpdateBar();
+    }
+
+    // In Start, not Awake: BowVisual builds the bow in its Awake, and every Awake runs before any Start.
+    // So the bow is in this list too, and blinks with her.
+    void Start()
+    {
+        renderers = GetComponentsInChildren<Renderer>();
     }
 
     void OnDestroy()

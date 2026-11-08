@@ -39,15 +39,21 @@ public abstract class Pickup : MonoBehaviour
     // Makes the ball-shaped object for a pickup. "protected" = only classes built on Pickup can call it.
     protected static GameObject CreateBall(string name, Vector3 position, Vector3 scale, Color color)
     {
-        GameObject ball = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        ball.name = name;
-        ball.transform.position = position;
-        ball.transform.localScale = scale;
-        ball.GetComponent<Renderer>().material.color = color;
+        return CreateShape(PrimitiveType.Sphere, name, position, scale, color);
+    }
+
+    // The same with any shape (scrolls are cylinders, gear is a cube)
+    protected static GameObject CreateShape(PrimitiveType shapeType, string name, Vector3 position, Vector3 scale, Color color)
+    {
+        GameObject shape = GameObject.CreatePrimitive(shapeType);
+        shape.name = name;
+        shape.transform.position = position;
+        shape.transform.localScale = scale;
+        shape.GetComponent<Renderer>().material.color = color;
 
         // We check the distance to the player ourselves, so the pickup needs no collider
-        Destroy(ball.GetComponent<Collider>());
-        return ball;
+        Destroy(shape.GetComponent<Collider>());
+        return shape;
     }
 
     // Picks a random landing spot on the ground within 'radius' of where we are

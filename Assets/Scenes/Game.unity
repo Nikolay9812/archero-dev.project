@@ -331,6 +331,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2101363884}
+    - targetCorrespondingSourceObject: {fileID: 8074729664840457433, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2101363885}
   m_SourcePrefab: {fileID: 100100000, guid: 7d4086ab366763d48bb287a085c3a224, type: 3}
 --- !u!1 &226436443
 GameObject:
@@ -1041,6 +1044,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a400290caf24f454ca3df80aaa1cbaae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkills
+--- !u!114 &2101363885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101363873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44ffeffd9cf71f45908ab99cae4940b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BowVisual
+  handPosition: {x: 0, y: 0, z: 0}
+  handRotation: {x: 23, y: 80, z: 30}
+  bowHeight: 0.8
+  woodColor: {r: 0.55, g: 0.35, b: 0.2, a: 1}
+  gripColor: {r: 0.25, g: 0.15, b: 0.1, a: 1}
+  stringColor: {r: 0.9, g: 0.9, b: 0.85, a: 1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

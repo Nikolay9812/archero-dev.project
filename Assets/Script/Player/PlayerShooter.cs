@@ -44,6 +44,10 @@ public class PlayerShooter : MonoBehaviour
         damage += Upgrades.BonusDamage;
         fireRate += Upgrades.BonusFireRate;
 
+        // Worn gear from the GEAR page
+        damage += Inventory.BonusInt(GearStat.Damage);
+        fireRate += Inventory.Bonus(GearStat.FireRate);
+
         // Bought with gems in the shop
         if (GemShop.Owns(GemItem.ExtraArrow)) frontArrows++;
     }

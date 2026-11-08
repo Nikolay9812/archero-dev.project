@@ -113,6 +113,56 @@ public static class UiBuilder
         return text;
     }
 
+    // A box that scrolls up and down, filled with a grid of cells. Put the cells into the returned
+    // ScrollRect's "content"; the grid places them by itself, row by row.
+    // The box fills its whole parent: move its edges with offsetMin/offsetMax afterwards.
+    public static ScrollRect CreateScrollGrid(string name, Transform parent, Vector2 cellSize, float spacing, int columns)
+    {
+        // The visible window. RectMask2D hides cells outside it, the clear image catches drags between cells.
+        GameObject view = CreateFullScreenPanel(name, parent, Color.clear);
+        view.AddComponent<RectMask2D>();
+
+        GameObject contentObject = new GameObject("Content", typeof(RectTransform));
+        contentObject.transform.SetParent(view.transform, false);
+        RectTransform content = contentObject.GetComponent<RectTransform>();
+        content.anchorMin = new Vector2(0f, 1f); // stuck to the top, as wide as the window
+        content.anchorMax = new Vector2(1f, 1f);
+        content.pivot = new Vector2(0.5f, 1f);
+        content.offsetMin = content.offsetMax = Vector2.zero;
+
+        GridLayoutGroup grid = contentObject.AddComponent<GridLayoutGroup>();
+        grid.cellSize = cellSize;
+        grid.spacing = new Vector2(spacing, spacing);
+        grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        grid.constraintCount = columns;
+        grid.childAlignment = TextAnchor.UpperCenter;
+        grid.padding = new RectOffset(0, 0, 10, 10);
+
+        // Makes the content exactly as tall as all its rows, so the scrolling knows where the end is
+        ContentSizeFitter fitter = contentObject.AddComponent<ContentSizeFitter>();
+        fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+        NestedScrollRect scroll = view.AddComponent<NestedScrollRect>();
+        scroll.viewport = view.GetComponent<RectTransform>();
+        scroll.content = content;
+        scroll.horizontal = false;
+        scroll.movementType = ScrollRect.MovementType.Clamped;
+        scroll.scrollSensitivity = 40f; // mouse wheel speed in the editor
+
+        return scroll;
+    }
+
+    // Removes every child (used to rebuild a list from scratch)
+    public static void ClearChildren(Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            // Destroy only happens at the end of the frame, so hide it now: the grid skips hidden cells
+            child.gameObject.SetActive(false);
+            Object.Destroy(child.gameObject);
+        }
+    }
+
     // UnityAction = "a method with no inputs", so you can pass the method to run when tapped.
     // Returns the button's label, so the caller can change its text later.
     public static Text CreateButton(string name, Transform parent, string label, Vector2 position, Vector2 size, Color color, UnityAction onClick)

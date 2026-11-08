@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -24,6 +25,22 @@ public class SaveData
     // Items bought with gems in the shop (see GemShop)
     public bool ownsExtraArrow;
     public bool ownsRevive;
+
+    // Gear (see Inventory). JsonUtility can save lists and arrays of [Serializable] classes too.
+    public List<OwnedGear> gear = new List<OwnedGear>();
+    public int[] equipped = new int[GearCatalog.SlotCount]; // the id of the item worn in each slot, 0 = empty
+    public int[] scrolls = new int[GearCatalog.SlotCount];  // scrolls owned for each slot
+    public int nextGearId = 1;                               // every new item gets its own id number
+}
+
+// One item the player owns. Two "Oak Bow"s are two OwnedGear objects with different ids.
+[Serializable]
+public class OwnedGear
+{
+    public int id;
+    public string type; // the id of its GearType, e.g. "oak_bow"
+    public Rarity rarity;
+    public int level = 1;
 }
 
 // Reads and writes the save file. "static" = there is only one, it needs no GameObject,

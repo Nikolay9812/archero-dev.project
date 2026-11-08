@@ -6,7 +6,9 @@ public enum WheelPrizeType
 {
     Coins,
     ProfileXp, // the permanent XP of the player's profile, not the XP of the current run
-    Gems
+    Gems,
+    Scrolls,   // 'amount' scrolls, each for a random gear slot
+    Gear       // 'amount' random pieces of gear
 }
 
 // One slice of the wheel. [Serializable] makes it show up in the Inspector.
@@ -33,7 +35,9 @@ public class SpinWheel : MonoBehaviour
         new WheelPrize { type = WheelPrizeType.Coins, amount = 50 },
         new WheelPrize { type = WheelPrizeType.ProfileXp, amount = 40 },
         new WheelPrize { type = WheelPrizeType.Coins, amount = 100 },
-        new WheelPrize { type = WheelPrizeType.Gems, amount = 3 }
+        new WheelPrize { type = WheelPrizeType.Gems, amount = 3 },
+        new WheelPrize { type = WheelPrizeType.Scrolls, amount = 2 },
+        new WheelPrize { type = WheelPrizeType.Gear, amount = 1 }
     };
 
     public float spinTime = 3f;     // seconds until the wheel stops
@@ -106,6 +110,20 @@ public class SpinWheel : MonoBehaviour
     // Splits the prize into pieces and sends them to the player
     void SpawnPrize(WheelPrize prize)
     {
+        Vector3 center = transform.position + Vector3.up * 0.5f;
+
+        // Scrolls and gear can't be split into pieces: each one flies on its own
+        if (prize.type == WheelPrizeType.Scrolls || prize.type == WheelPrizeType.Gear)
+        {
+            for (int i = 0; i < prize.amount; i++)
+            {
+                if (prize.type == WheelPrizeType.Scrolls) ScrollPickup.SpawnRandom(center, radius);
+                else GearPickup.SpawnRandom(center, Rarity.Common, radius);
+            }
+            Pickup.CollectAll();
+            return; // "return" leaves the method here, the code below is only for coins, XP and gems
+        }
+
         int pieces = Mathf.Clamp(piecesPerPrize, 1, prize.amount);
         int pieceValue = prize.amount / pieces;
         int leftover = prize.amount % pieces; // 52 in 5 pieces = 10 each, with 2 left over
@@ -133,6 +151,8 @@ public class SpinWheel : MonoBehaviour
         {
             case WheelPrizeType.Coins: return "COINS";
             case WheelPrizeType.ProfileXp: return "PROFILE XP";
+            case WheelPrizeType.Scrolls: return "SCROLLS";
+            case WheelPrizeType.Gear: return "GEAR";
             default: return "GEMS";
         }
     }
@@ -143,6 +163,8 @@ public class SpinWheel : MonoBehaviour
         {
             case WheelPrizeType.Coins: return new Color(1f, 0.8f, 0.15f);
             case WheelPrizeType.ProfileXp: return new Color(0.4f, 1f, 0.4f);
+            case WheelPrizeType.Scrolls: return ScrollPickup.ScrollColor;
+            case WheelPrizeType.Gear: return new Color(0.75f, 0.78f, 0.85f); // silver
             default: return new Color(0.9f, 0.3f, 1f);
         }
     }

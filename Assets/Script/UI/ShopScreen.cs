@@ -17,6 +17,7 @@ public class ShopScreen : MonoBehaviour
     }
 
     private Row[] rows;
+    private Text resultText; // what came out of the gear chest
 
     public void Build(Transform page)
     {
@@ -28,12 +29,24 @@ public class ShopScreen : MonoBehaviour
             rows[i] = CreateRow(page, GemShop.All[i], 250f - i * 220f);
         }
 
+        resultText = UiBuilder.CreateText("ChestResult", page, "", 56, new Vector2(0f, 250f - rows.Length * 220f), new Vector2(1000f, 120f));
+
         Refresh();
     }
 
     void Buy(Row row)
     {
-        if (GemShop.TryBuy(row.item)) Refresh();
+        if (!GemShop.TryBuy(row.item)) return;
+
+        if (row.item == GemItem.GearChest)
+        {
+            OwnedGear prize = GemShop.LastChestItem;
+            resultText.text = "You got: " + GearCatalog.RarityName(prize.rarity) + " " + Inventory.TypeOf(prize).title;
+            resultText.color = GearCatalog.RarityColor(prize.rarity);
+            SoundManager.Play(Sound.WheelPrize);
+        }
+
+        Refresh();
     }
 
     // Writes the current prices on the buttons (the gems are in the menu's header)

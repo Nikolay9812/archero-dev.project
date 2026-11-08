@@ -58,6 +58,12 @@ public class GameOverScreen : MonoBehaviour
         coinsText.text = "+" + Wallet.EarnedThisRun + " coins";
         if (Wallet.GemsEarnedThisRun > 0) coinsText.text += "   +" + Wallet.GemsEarnedThisRun + " gems";
         if (PlayerProfile.XpEarnedThisRun > 0) coinsText.text += "\n+" + PlayerProfile.XpEarnedThisRun + " profile XP"; // \n = new line
+
+        // Gear and scrolls found on the way (only shown if there were any)
+        string loot = "";
+        if (Inventory.GearFoundThisRun > 0) loot += "+" + Inventory.GearFoundThisRun + " gear   ";
+        if (Inventory.ScrollsFoundThisRun > 0) loot += "+" + Inventory.ScrollsFoundThisRun + " scrolls";
+        if (loot != "") coinsText.text += "\n" + loot;
         buttonText.text = buttonLabel;
         panel.SetActive(true);
         Time.timeScale = 0f; // freeze enemies and bullets
@@ -96,9 +102,10 @@ public class GameOverScreen : MonoBehaviour
         // Dark overlay over the whole screen
         panel = UiBuilder.CreateFullScreenPanel("Panel", canvas.transform, overlayColor);
 
-        titleText = UiBuilder.CreateText("Title", panel.transform, "GAME OVER", 120, new Vector2(0f, 200f), new Vector2(1000f, 160f));
+        titleText = UiBuilder.CreateText("Title", panel.transform, "GAME OVER", 120, new Vector2(0f, 330f), new Vector2(1000f, 160f));
 
-        coinsText = UiBuilder.CreateText("Coins", panel.transform, "", 56, new Vector2(0f, 47f), new Vector2(1000f, 140f));
+        // Up to 4 lines: coins + gems, profile XP, gear + scrolls
+        coinsText = UiBuilder.CreateText("Coins", panel.transform, "", 48, new Vector2(0f, 130f), new Vector2(1000f, 240f));
         coinsText.color = new Color(1f, 0.8f, 0.15f);
 
         Vector2 buttonSize = new Vector2(480f, 150f);

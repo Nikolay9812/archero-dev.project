@@ -71,6 +71,12 @@ public class EnemyBoss : MonoBehaviour
         Enemy.knockback = 0f;
         Enemy.deathPieces = 30;
         Enemy.deathShake = 0.6f;
+
+        // A boss always drops a piece of gear (at least Great) and a scroll
+        Enemy.gearDropChance = 1f;
+        Enemy.scrollDropChance = 1f;
+        Enemy.minimumGearRarity = Rarity.Great;
+
         warningCircle = CreateWarningCircle();
     }
 

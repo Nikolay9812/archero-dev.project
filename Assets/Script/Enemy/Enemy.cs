@@ -22,6 +22,11 @@ public class Enemy : MonoBehaviour
     public int coinDrops = 2;
     public int coinValue = 5;
 
+    [Header("Loot")]
+    [Range(0f, 1f)] public float scrollDropChance = 0.08f; // 0.08 = 8% chance to drop a scroll
+    [Range(0f, 1f)] public float gearDropChance = 0.02f;   // 0.02 = 2% chance to drop a piece of gear
+    public Rarity minimumGearRarity = Rarity.Common;
+
     [Header("Game feel")]
     public Color damageNumberColor = Color.white;
     public float knockback = 3f;       // how hard arrows push it back (0 = not at all, the boss uses 0)
@@ -180,12 +185,19 @@ public class Enemy : MonoBehaviour
         }
 
         // The Coin Bonus talent makes each coin worth more. 100 + 20 = 120% of the normal value.
-        int valueWithBonus = Mathf.RoundToInt(coinValue * (100 + Upgrades.CoinBonusPercent) / 100f);
+        // The Lucky Amulet adds to it the same way.
+        int bonusPercent = Upgrades.CoinBonusPercent + Inventory.BonusInt(GearStat.CoinBonus);
+        int valueWithBonus = Mathf.RoundToInt(coinValue * (100 + bonusPercent) / 100f);
 
         for (int i = 0; i < coinDrops; i++)
         {
             Coin.Spawn(FloorPosition + Vector3.up * 0.3f, valueWithBonus, 1.2f);
         }
+
+        // Random.value is a random number from 0 to 1, so it is below 0.08 in 8% of all deaths.
+        // "UnityEngine." in front, because "using System;" above has a Random class too.
+        if (UnityEngine.Random.value < scrollDropChance) ScrollPickup.SpawnRandom(FloorPosition + Vector3.up * 0.3f, 1.2f);
+        if (UnityEngine.Random.value < gearDropChance) GearPickup.SpawnRandom(FloorPosition + Vector3.up * 0.3f, minimumGearRarity, 1.2f);
 
         // Burst into little cubes of our own color. Bigger enemies (the boss) throw bigger pieces.
         Color pieceColor = originalColors.Length > 0 ? originalColors[0] : bodyColor;

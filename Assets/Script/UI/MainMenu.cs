@@ -20,11 +20,16 @@ public class MainMenu : MonoBehaviour
     public Color slotColor = new Color(0.17f, 0.21f, 0.32f); // behind the XP bar, coins and gems
     public Color chapterCardColor = new Color(0.25f, 0.4f, 0.55f);
 
+    [Header("Gear page")]
+    public GameObject avatarModel;                     // drag the character model here (e.g. SanpakuChan)
+    public RuntimeAnimatorController avatarAnimator;   // drag PlayerAnimator here, so she breathes (Idle)
+
     private const float HeaderHeight = 140f;
     private const float FooterHeight = 170f; // same as BottomTabBar.tabHeight
 
     // One page per tab. To add or remove a tab, change this list and the page numbers below it.
     private const int ShopPage = 0;
+    private const int GearPage = 1;
     private const int PlayPage = 2;
     private const int CollectiblePage = 3;
     private readonly string[] tabNames = { "SHOP", "GEAR", "PLAY", "COLLECTIBLE", "EVENTS" };
@@ -111,6 +116,7 @@ public class MainMenu : MonoBehaviour
             Transform page = swiper.CreatePage(i);
 
             if (i == ShopPage) BuildShopPage(page);
+            else if (i == GearPage) gameObject.AddComponent<GearScreen>().Build(page, avatarModel, avatarAnimator);
             else if (i == PlayPage) BuildPlayPage(page);
             else if (i == CollectiblePage) gameObject.AddComponent<CollectibleScreen>().Build(page);
             else BuildComingSoonPage(page, tabNames[i]);

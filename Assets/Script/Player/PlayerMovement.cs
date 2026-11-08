@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
         if (joystick == null) joystick = FindAnyObjectByType<FloatingJoystick>();
 
         speed += Upgrades.BonusMoveSpeed; // permanent talent from the Collectible page
+        speed += Inventory.Bonus(GearStat.MoveSpeed); // worn gear
     }
 
     void OnEnable()

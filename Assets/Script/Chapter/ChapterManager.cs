@@ -43,6 +43,7 @@ public class ChapterManager : MonoBehaviour
 
         Wallet.StartRun();
         PlayerProfile.StartRun();
+        Inventory.StartRun();
         StartCoroutine(GoToRoom(0));
     }
 
@@ -66,6 +67,7 @@ public class ChapterManager : MonoBehaviour
             changingRoom = true; // so the reward can never be given twice
             PlayerProfile.AddXp(chapter.profileXpReward);
             Wallet.AddGems(chapter.gemReward);
+            for (int i = 0; i < chapter.gearReward; i++) Inventory.AddRandomGear(Rarity.Common);
             ChapterCleared?.Invoke();
             return;
         }

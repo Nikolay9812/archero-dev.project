@@ -21,4 +21,16 @@ public static class SaveTools
         Wallet.AddGems(100);
         Debug.Log("Profile level is now " + PlayerProfile.Level + ", coins: " + Wallet.Coins);
     }
+
+    // 3 Common Oak Bows (ready to merge), 10 random items and 5 scrolls for every slot
+    [MenuItem("Archero/Add Test Gear + Scrolls")]
+    static void AddTestGear()
+    {
+        GearType oakBow = GearCatalog.Find("oak_bow");
+        for (int i = 0; i < 3; i++) Inventory.AddGear(oakBow, Rarity.Common);
+        for (int i = 0; i < 10; i++) Inventory.AddRandomGear(Rarity.Common);
+        for (int slot = 0; slot < GearCatalog.SlotCount; slot++) Inventory.AddScrolls((GearSlot)slot, 5);
+
+        Debug.Log("You now own " + Inventory.All.Count + " pieces of gear.");
+    }
 }

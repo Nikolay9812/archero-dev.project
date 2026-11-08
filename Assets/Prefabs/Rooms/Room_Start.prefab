@@ -206,6 +206,10 @@ MonoBehaviour:
     amount: 100
   - type: 2
     amount: 3
+  - type: 3
+    amount: 2
+  - type: 4
+    amount: 1
   spinTime: 3
   fullTurns: 5
   resultTime: 1.2
