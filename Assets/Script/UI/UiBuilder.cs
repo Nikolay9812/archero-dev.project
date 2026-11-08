@@ -152,6 +152,56 @@ public static class UiBuilder
         return scroll;
     }
 
+    // A bar you can drag from 0 to 1. A Slider is made of 3 parts:
+    //   the background (also where you tap), the fill (grows with the value) and the handle (the knob).
+    // UnityAction<float> = "a method that takes one float": it gets the new value every time it moves.
+    public static Slider CreateSlider(string name, Transform parent, Vector2 position, Vector2 size, Color fillColor, float value, UnityAction<float> onChange)
+    {
+        Image background = CreateBox(name, parent, new Color(0.17f, 0.21f, 0.32f), position, size);
+
+        // The fill fills its area from the left edge up to the value (the Slider moves its right edge)
+        RectTransform fillArea = CreateStretched("FillArea", background.transform, 0f);
+        Image fill = CreateBox("Fill", fillArea, fillColor, Vector2.zero, Vector2.zero);
+        Stretch(fill.rectTransform, 0f);
+
+        // The handle area is a bit narrower, so the knob stays inside the bar at 0 and at 1
+        const float handleWidth = 60f;
+        RectTransform handleArea = CreateStretched("HandleArea", background.transform, handleWidth / 2f);
+        Image handle = CreateBox("Handle", handleArea, Color.white, Vector2.zero, Vector2.zero);
+        handle.rectTransform.anchorMin = new Vector2(0f, 0f); // the Slider sets the x anchors, we set y: full height...
+        handle.rectTransform.anchorMax = new Vector2(0f, 1f);
+        handle.rectTransform.sizeDelta = new Vector2(handleWidth, 30f); // ...plus 30 units taller than the bar
+
+        Slider slider = background.gameObject.AddComponent<Slider>();
+        slider.fillRect = fill.rectTransform;
+        slider.handleRect = handle.rectTransform;
+        slider.targetGraphic = handle;
+        slider.minValue = 0f;
+        slider.maxValue = 1f;
+        slider.value = value;                      // set BEFORE listening, so building it doesn't count as a change
+        slider.onValueChanged.AddListener(onChange);
+
+        return slider;
+    }
+
+    // An empty object as big as its parent, minus 'sideInset' on the left and right
+    static RectTransform CreateStretched(string name, Transform parent, float sideInset)
+    {
+        GameObject area = new GameObject(name, typeof(RectTransform));
+        area.transform.SetParent(parent, false);
+        RectTransform rect = area.GetComponent<RectTransform>();
+        Stretch(rect, sideInset);
+        return rect;
+    }
+
+    static void Stretch(RectTransform rect, float sideInset)
+    {
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = new Vector2(sideInset, 0f);
+        rect.offsetMax = new Vector2(-sideInset, 0f);
+    }
+
     // Removes every child (used to rebuild a list from scratch)
     public static void ClearChildren(Transform parent)
     {

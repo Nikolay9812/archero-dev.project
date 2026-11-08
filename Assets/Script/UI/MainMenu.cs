@@ -139,6 +139,25 @@ public class MainMenu : MonoBehaviour
         RectTransform button = label.transform.parent.GetComponent<RectTransform>();
         button.anchorMin = button.anchorMax = new Vector2(0.5f, 0f);
         button.anchoredPosition = new Vector2(0f, 170f);
+
+        BuildSettingsButton(page);
+    }
+
+    // A square button in the top right corner of the page, with 3 white bars as its icon
+    void BuildSettingsButton(Transform page)
+    {
+        Transform canvas = page.GetComponentInParent<Canvas>().transform;
+        Text label = UiBuilder.CreateButton("SettingsButton", page, "", Vector2.zero, new Vector2(120f, 120f), slotColor, () => SettingsScreen.Open(canvas));
+
+        RectTransform button = label.transform.parent.GetComponent<RectTransform>();
+        button.anchorMin = button.anchorMax = button.pivot = new Vector2(1f, 1f); // measured from the top right corner
+        button.anchoredPosition = new Vector2(-30f, -30f);
+
+        for (int i = 0; i < 3; i++)
+        {
+            Image bar = UiBuilder.CreateBox("Bar" + i, button, Color.white, new Vector2(0f, (1 - i) * 28f), new Vector2(70f, 12f));
+            bar.raycastTarget = false; // let the tap reach the button under it
+        }
     }
 
     void BuildShopPage(Transform page)

@@ -20,9 +20,9 @@ public static class Chapter1Builder
     const string MaterialFolder = "Assets/Material/";
     const string ChapterPath = "Assets/Chapters/Chapter1.asset";
 
-    // The enemy prefab file names (the shooter's file really is called "Shoter")
+    // The enemy prefab file names
     const string Chaser = "Chaser";
-    const string Shooter = "Shoter";
+    const string Shooter = "Shooter";
     const string SpreadShooter = "SpreadShooter";
     const string Dasher = "Dasher";
 

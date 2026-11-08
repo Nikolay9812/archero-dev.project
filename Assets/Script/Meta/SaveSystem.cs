@@ -31,6 +31,11 @@ public class SaveData
     public int[] equipped = new int[GearCatalog.SlotCount]; // the id of the item worn in each slot, 0 = empty
     public int[] scrolls = new int[GearCatalog.SlotCount];  // scrolls owned for each slot
     public int nextGearId = 1;                               // every new item gets its own id number
+
+    // Player settings (see Settings). 1 = full volume, 0 = off.
+    public float musicVolume = 1f;
+    public float soundVolume = 1f;
+    public bool screenShake = true;
 }
 
 // One item the player owns. Two "Oak Bow"s are two OwnedGear objects with different ids.

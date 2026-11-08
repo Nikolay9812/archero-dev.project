@@ -56,7 +56,8 @@ public class CameraFollow : MonoBehaviour
     // "static" so other scripts can just write CameraFollow.Shake(0.2f, 0.15f).
     public static void Shake(float strength, float time)
     {
-        if (Instance == null || !Instance.shakeEnabled) return;
+        // Off if unticked here OR switched off by the player in the settings
+        if (Instance == null || !Instance.shakeEnabled || !Settings.ScreenShake) return;
 
         // A weak shake must not cut short a strong one that is still going (e.g. the boss dying)
         float currentStrength = Instance.shakeTimer > 0f ? Instance.shakeStrength * (Instance.shakeTimer / Instance.shakeTime) : 0f;

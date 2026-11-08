@@ -148,7 +148,8 @@ public class PauseMenu : MonoBehaviour
         skillList = listObject.transform;
 
         Vector2 buttonSize = new Vector2(480f, 150f);
-        UiBuilder.CreateButton("ResumeButton", panel.transform, "RESUME", new Vector2(0f, -420f), buttonSize, resumeButtonColor, Resume);
-        UiBuilder.CreateButton("QuitButton", panel.transform, "QUIT", new Vector2(0f, -600f), buttonSize, quitButtonColor, QuitToMenu);
+        UiBuilder.CreateButton("ResumeButton", panel.transform, "RESUME", new Vector2(0f, -340f), buttonSize, resumeButtonColor, Resume);
+        UiBuilder.CreateButton("SettingsButton", panel.transform, "SETTINGS", new Vector2(0f, -510f), buttonSize, quitButtonColor, () => SettingsScreen.Open(canvas.transform));
+        UiBuilder.CreateButton("QuitButton", panel.transform, "QUIT", new Vector2(0f, -680f), buttonSize, quitButtonColor, QuitToMenu);
     }
 }

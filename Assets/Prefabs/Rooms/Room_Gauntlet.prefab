@@ -1624,7 +1624,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2564722791527218752, guid: 0fe809d33d0cbf54cadd9e2b75709019, type: 3}
       propertyPath: m_Name
-      value: Shoter
+      value: Shooter
       objectReference: {fileID: 0}
     - target: {fileID: 8019051721311232147, guid: 0fe809d33d0cbf54cadd9e2b75709019, type: 3}
       propertyPath: m_LocalPosition.x

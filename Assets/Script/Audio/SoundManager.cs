@@ -64,6 +64,20 @@ public class SoundManager : MonoBehaviour
         EnemyBoss.Disappeared += OnBossGone;
         PlayerHealth.Died += OnPlayerDied;
         ChapterManager.ChapterCleared += OnChapterCleared;
+        Settings.Changed += OnSettingsChanged;
+    }
+
+    // The library's mix times the player's setting
+    float SoundVolume => library.soundVolume * Settings.SoundVolume;
+    float MusicVolume => library.musicVolume * Settings.MusicVolume;
+
+    // A slider in the settings moved: the music gets louder or quieter right away
+    void OnSettingsChanged()
+    {
+        if (library == null) return;
+
+        AudioSource current = musicSources[currentMusic];
+        if (current.clip != null) current.volume = MusicVolume;
     }
 
     void OnDestroy()
@@ -73,6 +87,7 @@ public class SoundManager : MonoBehaviour
         EnemyBoss.Disappeared -= OnBossGone;
         PlayerHealth.Died -= OnPlayerDied;
         ChapterManager.ChapterCleared -= OnChapterCleared;
+        Settings.Changed -= OnSettingsChanged;
     }
 
     // Plays a sound once. 'randomPitch' makes it a tiny bit higher or lower each time,
@@ -103,7 +118,7 @@ public class SoundManager : MonoBehaviour
         nextSource = (nextSource + 1) % SoundSources;
 
         source.pitch = randomPitch ? Random.Range(0.9f, 1.1f) : 1f;
-        source.PlayOneShot(clip, library.soundVolume);
+        source.PlayOneShot(clip, SoundVolume);
     }
 
     // Fades from the current song to 'clip' (null = fade to silence)
@@ -134,7 +149,7 @@ public class SoundManager : MonoBehaviour
         {
             t += Time.unscaledDeltaTime / MusicFadeTime;
             oldMusic.volume = Mathf.Lerp(oldStartVolume, 0f, t);
-            newMusic.volume = Mathf.Lerp(0f, library.musicVolume, t);
+            newMusic.volume = Mathf.Lerp(0f, MusicVolume, t);
             yield return null;
         }
 
