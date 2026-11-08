@@ -25,12 +25,20 @@ public class PlayerShooter : MonoBehaviour
 
     public Enemy CurrentTarget { get; private set; }
 
+    // Fired when she STARTS drawing the bow (PlayerAnimation listens to it to play the bow animation).
+    // The arrow itself only flies a moment later, when her hand lets go in the animation.
+    public event System.Action StartedDrawing;
+
     private PlayerMovement movement;
+    private PlayerAnimation playerAnimation;
     private float cooldown;
+    private bool isDrawing;   // true = the bow is being drawn, the arrow is about to fly
+    private float drawTimer;  // seconds left until the arrow is released
 
     void Awake()
     {
         movement = GetComponent<PlayerMovement>();
+        playerAnimation = GetComponent<PlayerAnimation>();
 
         // Permanent talents from the Collectible page
         damage += Upgrades.BonusDamage;
@@ -45,14 +53,20 @@ public class PlayerShooter : MonoBehaviour
         cooldown -= Time.deltaTime;
 
         // Moving = no shooting. This is the core rule of the game.
+        // Moving in the middle of a draw cancels that arrow.
         if (movement.IsMoving)
         {
             CurrentTarget = null;
+            isDrawing = false;
             return;
         }
 
         CurrentTarget = FindNearestEnemy();
-        if (CurrentTarget == null) return;
+        if (CurrentTarget == null)
+        {
+            isDrawing = false;
+            return;
+        }
 
         // Turn on the ground plane only, so she doesn't tilt up or down
         Vector3 toEnemy = CurrentTarget.transform.position - transform.position;
@@ -62,11 +76,28 @@ public class PlayerShooter : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(toEnemy);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
 
+        // 2. The bow is drawn: count down to the release, then let the arrows fly.
+        //    She keeps turning to the target meanwhile, so we aim at where it is NOW.
+        if (isDrawing)
+        {
+            drawTimer -= Time.deltaTime;
+            if (drawTimer <= 0f)
+            {
+                isDrawing = false;
+                Shoot(toEnemy.normalized);
+            }
+            return;
+        }
+
+        // 1. Ready and aimed: start drawing the bow (this starts the animation)
         bool isAimed = Quaternion.Angle(transform.rotation, targetRotation) <= aimTolerance;
         if (isAimed && cooldown <= 0f)
         {
-            Shoot(toEnemy.normalized);
             cooldown = 1f / fireRate;
+            isDrawing = true;
+            // How long until her hand lets go in the animation (0 = no animation, shoot right away)
+            drawTimer = playerAnimation != null ? playerAnimation.ReleaseDelay(fireRate) : 0f;
+            StartedDrawing?.Invoke();
         }
     }
 

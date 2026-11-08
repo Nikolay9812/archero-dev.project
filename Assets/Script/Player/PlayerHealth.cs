@@ -120,9 +120,13 @@ public class PlayerHealth : MonoBehaviour
         PlayerShooter shooter = GetComponent<PlayerShooter>();
         if (shooter != null) shooter.enabled = false;
 
-        // Later: death animation. For now she just falls over.
-        transform.rotation = Quaternion.LookRotation(Vector3.up, transform.forward);
-        transform.position += Vector3.up * 0.15f;
+        // Play the death animation. Without one (Animator not set up), she just falls over by code.
+        PlayerAnimation playerAnimation = GetComponent<PlayerAnimation>();
+        if (playerAnimation == null || !playerAnimation.PlayDeath())
+        {
+            transform.rotation = Quaternion.LookRotation(Vector3.up, transform.forward);
+            transform.position += Vector3.up * 0.15f;
+        }
         barRoot.gameObject.SetActive(false);
 
         Died?.Invoke();

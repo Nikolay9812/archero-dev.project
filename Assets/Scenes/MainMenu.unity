@@ -458,12 +458,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf4da70777352294fa37c6cb40f65c78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
-  gameTitle: ARROW RUN
+  gameTitle: GreenChero
   gameSceneName: Game
   backgroundColor: {r: 0.13, g: 0.17, b: 0.25, a: 1}
   titleColor: {r: 1, g: 1, b: 1, a: 1}
+  profileColor: {r: 0.4, g: 1, b: 0.4, a: 1}
   coinsColor: {r: 1, g: 0.8, b: 0.15, a: 1}
+  gemsColor: {r: 0.3, g: 0.9, b: 1, a: 1}
   buttonColor: {r: 0.95, g: 0.65, b: 0.15, a: 1}
+  headerColor: {r: 0.09, g: 0.11, b: 0.18, a: 1}
+  slotColor: {r: 0.17, g: 0.21, b: 0.32, a: 1}
+  chapterCardColor: {r: 0.25, g: 0.4, b: 0.55, a: 1}
 --- !u!4 &1604696099
 Transform:
   m_ObjectHideFlags: 0
