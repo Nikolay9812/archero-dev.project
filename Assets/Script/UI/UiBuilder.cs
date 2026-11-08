@@ -125,7 +125,10 @@ public static class UiBuilder
         rect.sizeDelta = size;
         rect.anchoredPosition = position;
 
-        buttonObject.GetComponent<Button>().onClick.AddListener(onClick);
+        // Every button made here clicks, so no screen has to remember to add the sound itself
+        Button button = buttonObject.GetComponent<Button>();
+        button.onClick.AddListener(() => SoundManager.Play(Sound.Click));
+        button.onClick.AddListener(onClick);
 
         return CreateText("Label", buttonObject.transform, label, 72, Vector2.zero, size);
     }

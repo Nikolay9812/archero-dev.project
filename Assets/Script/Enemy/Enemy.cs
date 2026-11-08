@@ -146,6 +146,7 @@ public class Enemy : MonoBehaviour
         DamageNumber.Spawn(TopOfBody() + Vector3.up * 0.3f, amount, damageNumberColor);
 
         if (IsDead) Die();
+        else SoundManager.Play(Sound.EnemyHit, true);
     }
 
     // Pushes the enemy back a little, in 'direction' (Arrow calls this with its flying direction)
@@ -190,6 +191,7 @@ public class Enemy : MonoBehaviour
         Color pieceColor = originalColors.Length > 0 ? originalColors[0] : bodyColor;
         DeathBurst.Spawn(FloorPosition, pieceColor, deathPieces, 0.25f * transform.localScale.x);
         CameraFollow.Shake(deathShake, 0.2f);
+        SoundManager.Play(Sound.EnemyDeath, true);
 
         Destroy(gameObject);
     }

@@ -19,5 +19,6 @@ public class ProfileXpOrb : Pickup
     protected override void GiveReward(PlayerHealth player)
     {
         PlayerProfile.AddXp(value);
+        SoundManager.Play(Sound.Xp, true);
     }
 }

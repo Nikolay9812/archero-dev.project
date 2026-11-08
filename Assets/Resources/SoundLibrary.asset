@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecab1c632f963f04aa7293dc4a6b5a4b, type: 3}
+  m_Name: SoundLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::SoundLibrary
+  soundVolume: 0.8
+  musicVolume: 0.4
+  menuMusic: {fileID: 8300000, guid: 17000704231b8ff47903433828125b23, type: 3}
+  gameMusic: {fileID: 8300000, guid: ef503027dc6923349926ce617e711bf5, type: 3}
+  bossMusic: {fileID: 8300000, guid: e4d6161910cb3014e95836704058a3a2, type: 3}
+  shoot:
+  - {fileID: 8300000, guid: 4e545db404231ea47a187d1f9ea5ee2d, type: 3}
+  enemyHit:
+  - {fileID: 8300000, guid: 5e11bbaca30010642973781a39bb0d40, type: 3}
+  enemyDeath:
+  - {fileID: 8300000, guid: 8af44e1c17881e04b9854daf15360da5, type: 3}
+  playerHurt:
+  - {fileID: 8300000, guid: df66256d858fe604b90374640fecc02c, type: 3}
+  heal:
+  - {fileID: 8300000, guid: 1388bcd5aea43aa4490d65f2819c24ec, type: 3}
+  coin:
+  - {fileID: 8300000, guid: d79984f0d53ec6b41b143c727bc1cae3, type: 3}
+  gem:
+  - {fileID: 8300000, guid: 91fb615cd1d2da14c9db0e389d8a678e, type: 3}
+  xp:
+  - {fileID: 8300000, guid: b6cd9afe5e0372b4d866264deb54277f, type: 3}
+  levelUp:
+  - {fileID: 8300000, guid: 33ef41d70832d214c8cbe3491b715cad, type: 3}
+  skillChosen:
+  - {fileID: 8300000, guid: 30cf5b48f9a0ffc4c9188b86a849cb60, type: 3}
+  doorOpen:
+  - {fileID: 8300000, guid: 2a26b054ce6e6174aaafbe24cb1729d9, type: 3}
+  roomClear:
+  - {fileID: 8300000, guid: 76f1d37db58d15c408fdc1c541e0bb80, type: 3}
+  wheelSpin:
+  - {fileID: 8300000, guid: 64d0904c053689149ba357c4255b94fb, type: 3}
+  wheelPrize:
+  - {fileID: 8300000, guid: 938a9996be9cbd745aa5b8c4731aa049, type: 3}
+  bossAppear:
+  - {fileID: 8300000, guid: 9d7e1747dba969549b896cff5b5301ea, type: 3}
+  gameOver:
+  - {fileID: 8300000, guid: efdccfa514d6a9544bf97ad9ee3e649b, type: 3}
+  chapterClear:
+  - {fileID: 8300000, guid: 99c79bd94711ce44d9ec84e880472aec, type: 3}
+  click:
+  - {fileID: 8300000, guid: 9e6efd302c50b824e9280e4a7648b18a, type: 3}

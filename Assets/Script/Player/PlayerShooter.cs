@@ -122,6 +122,8 @@ public class PlayerShooter : MonoBehaviour
 
     void Shoot(Vector3 direction)
     {
+        SoundManager.Play(Sound.Shoot, true); // one sound per volley, not per arrow
+
         // Front arrows: side by side, centered on the aim line.
         // 'right' points to the player's right; Cross gives the direction at 90 degrees to both vectors.
         Vector3 right = Vector3.Cross(Vector3.up, direction);

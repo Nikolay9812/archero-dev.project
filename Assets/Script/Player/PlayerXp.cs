@@ -41,6 +41,7 @@ public class PlayerXp : MonoBehaviour
         {
             CurrentXp -= XpToNextLevel; // leftover XP carries over to the next level
             Level++;
+            SoundManager.Play(Sound.LevelUp);
             LeveledUp?.Invoke(Level);
         }
 

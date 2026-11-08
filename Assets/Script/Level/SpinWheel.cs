@@ -71,6 +71,7 @@ public class SpinWheel : MonoBehaviour
     {
         Time.timeScale = 0f; // pause, so the player can't walk away during the spin
         label.text = "";
+        SoundManager.Play(Sound.WheelSpin);
 
         int prizeIndex = Random.Range(0, prizes.Count);
         WheelPrize prize = prizes[prizeIndex];
@@ -95,6 +96,7 @@ public class SpinWheel : MonoBehaviour
 
         label.text = "+" + prize.amount + " " + PrizeName(prize.type);
         label.color = PrizeColor(prize.type);
+        SoundManager.Play(Sound.WheelPrize);
         yield return new WaitForSecondsRealtime(resultTime); // the normal WaitForSeconds would wait forever while paused
 
         Time.timeScale = 1f;

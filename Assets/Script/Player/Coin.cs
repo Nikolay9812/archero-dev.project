@@ -28,5 +28,6 @@ public class Coin : Pickup
     protected override void GiveReward(PlayerHealth player)
     {
         Wallet.Add(value);
+        SoundManager.Play(Sound.Coin, true);
     }
 }

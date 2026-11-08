@@ -22,5 +22,6 @@ public class XpOrb : Pickup
     {
         PlayerXp xp = player.GetComponent<PlayerXp>();
         if (xp != null) xp.AddXp(value);
+        SoundManager.Play(Sound.Xp, true);
     }
 }

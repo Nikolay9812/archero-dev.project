@@ -19,5 +19,6 @@ public class Gem : Pickup
     protected override void GiveReward(PlayerHealth player)
     {
         Wallet.AddGems(value);
+        SoundManager.Play(Sound.Gem, true);
     }
 }

@@ -103,6 +103,8 @@ public class SkillChoiceScreen : MonoBehaviour
 
     void OnCardChosen(int cardIndex)
     {
+        SoundManager.Play(Sound.SkillChosen);
+
         PlayerHealth player = PlayerHealth.Instance;
         if (player != null)
         {

@@ -80,6 +80,7 @@ public class PlayerHealth : MonoBehaviour
         // Game feel: a red number above her head and a short camera shake, so every hit is noticed
         DamageNumber.Spawn(transform.position + barOffset + Vector3.up * 0.4f, amount, hurtNumberColor);
         CameraFollow.Shake(hitShake, 0.2f);
+        SoundManager.Play(Sound.PlayerHurt, true);
 
         if (IsDead && GemShop.Owns(GemItem.Revive) && !reviveUsed) Revive();
         else if (IsDead) Die();
@@ -90,6 +91,7 @@ public class PlayerHealth : MonoBehaviour
     void Revive()
     {
         reviveUsed = true;
+        SoundManager.Play(Sound.Heal);
         CurrentHealth = maxHealth / 2;
         invincibleTimer = reviveInvincibleTime;
         UpdateBar();
@@ -98,6 +100,9 @@ public class PlayerHealth : MonoBehaviour
     public void Heal(int amount)
     {
         if (IsDead) return;
+
+        // Only make a sound when she really gets HP back (not when she is already full)
+        if (amount > 0 && CurrentHealth < maxHealth) SoundManager.Play(Sound.Heal);
 
         CurrentHealth = Mathf.Min(CurrentHealth + amount, maxHealth); // never above max
         UpdateBar();

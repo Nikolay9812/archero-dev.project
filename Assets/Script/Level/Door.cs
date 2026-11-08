@@ -36,6 +36,7 @@ public class Door : MonoBehaviour
     {
         if (IsOpen) return;
         IsOpen = true;
+        SoundManager.Play(Sound.DoorOpen);
 
         // Stop blocking right away, so the player can walk through while it is still sinking
         SetBlocking(false);

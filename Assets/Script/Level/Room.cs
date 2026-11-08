@@ -56,6 +56,9 @@ public class Room : MonoBehaviour
 
         // (A room with no enemies at all is cleared straight away)
         IsCleared = true;
+        // The "room cleared" jingle only after a fight (not in the start room or rest rooms).
+        // The last room is skipped too: the chapter clear tune plays there instead.
+        if (roomEnemies.Length > 0 && !ChapterManager.IsLastRoom) SoundManager.Play(Sound.RoomClear);
         if (exitDoor != null) exitDoor.Open();
         Pickup.CollectAll(); // the reward: all XP and coins on the floor fly to the player
     }
