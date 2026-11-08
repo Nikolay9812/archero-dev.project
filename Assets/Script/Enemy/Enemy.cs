@@ -22,6 +22,12 @@ public class Enemy : MonoBehaviour
     public int coinDrops = 2;
     public int coinValue = 5;
 
+    [Header("Game feel")]
+    public Color damageNumberColor = Color.white;
+    public float knockback = 3f;       // how hard arrows push it back (0 = not at all, the boss uses 0)
+    public int deathPieces = 8;        // little cubes that fly out when it dies
+    public float deathShake = 0.15f;   // how much the camera shakes when it dies
+
     // Every living enemy in the scene. The player's auto-shoot looks here for the nearest target,
     // so we don't need tags or FindObjectsByType every frame.
     public static readonly List<Enemy> All = new List<Enemy>();
@@ -37,6 +43,7 @@ public class Enemy : MonoBehaviour
     private Renderer[] renderers;
     private Color[] originalColors;
     private float flashTimer;
+    private Vector3 knockbackVelocity;
 
     void Awake()
     {
@@ -115,6 +122,13 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        // Knockback: slide back and slow down quickly (Lerp moves the speed a bit closer to zero every frame)
+        if (knockbackVelocity.sqrMagnitude > 0.01f)
+        {
+            Push(knockbackVelocity * Time.deltaTime);
+            knockbackVelocity = Vector3.Lerp(knockbackVelocity, Vector3.zero, 10f * Time.deltaTime);
+        }
+
         if (flashTimer <= 0f) return;
 
         flashTimer -= Time.deltaTime;
@@ -129,8 +143,27 @@ public class Enemy : MonoBehaviour
         flashTimer = hitFlashTime;
         SetColor(hitFlashColor);
         HealthChanged?.Invoke();
+        DamageNumber.Spawn(TopOfBody() + Vector3.up * 0.3f, amount, damageNumberColor);
 
         if (IsDead) Die();
+    }
+
+    // Pushes the enemy back a little, in 'direction' (Arrow calls this with its flying direction)
+    public void Knockback(Vector3 direction)
+    {
+        direction.y = 0f; // only along the ground
+        knockbackVelocity = direction.normalized * knockback;
+    }
+
+    // The highest point of the model, so damage numbers appear above the head of small AND big enemies
+    Vector3 TopOfBody()
+    {
+        float top = transform.position.y;
+        foreach (Renderer r in renderers)
+        {
+            if (r != null) top = Mathf.Max(top, r.bounds.max.y);
+        }
+        return new Vector3(transform.position.x, top, transform.position.z);
     }
 
     void Die()
@@ -153,7 +186,11 @@ public class Enemy : MonoBehaviour
             Coin.Spawn(FloorPosition + Vector3.up * 0.3f, valueWithBonus, 1.2f);
         }
 
-        // Later: death animation...
+        // Burst into little cubes of our own color. Bigger enemies (the boss) throw bigger pieces.
+        Color pieceColor = originalColors.Length > 0 ? originalColors[0] : bodyColor;
+        DeathBurst.Spawn(FloorPosition, pieceColor, deathPieces, 0.25f * transform.localScale.x);
+        CameraFollow.Shake(deathShake, 0.2f);
+
         Destroy(gameObject);
     }
 

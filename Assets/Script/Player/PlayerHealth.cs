@@ -16,6 +16,10 @@ public class PlayerHealth : MonoBehaviour
     public Color barColor = new Color(0.3f, 0.85f, 0.3f);
     public Color barLowColor = new Color(0.9f, 0.25f, 0.2f);
 
+    [Header("Game feel")]
+    public Color hurtNumberColor = new Color(1f, 0.25f, 0.2f);
+    public float hitShake = 0.3f; // camera shake in meters when she gets hit
+
     // The one player in the scene, so enemies can find her without tags
     public static PlayerHealth Instance { get; private set; }
 
@@ -72,6 +76,10 @@ public class PlayerHealth : MonoBehaviour
 
         CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
         UpdateBar();
+
+        // Game feel: a red number above her head and a short camera shake, so every hit is noticed
+        DamageNumber.Spawn(transform.position + barOffset + Vector3.up * 0.4f, amount, hurtNumberColor);
+        CameraFollow.Shake(hitShake, 0.2f);
 
         if (IsDead && GemShop.Owns(GemItem.Revive) && !reviveUsed) Revive();
         else if (IsDead) Die();

@@ -44,6 +44,7 @@ public class Arrow : MonoBehaviour
         if (enemy == null || enemy.IsDead || enemy == lastHit) return;
 
         enemy.TakeDamage(damage);
+        enemy.Knockback(transform.forward); // push it back the way the arrow was flying
 
         // Ricochet: fly on to the next enemy instead of disappearing
         if (bounces > 0 && BounceAwayFrom(enemy)) return;

@@ -66,6 +66,11 @@ public class EnemyBoss : MonoBehaviour
     {
         Enemy = GetComponent<Enemy>();
         normalScale = transform.localScale;
+
+        // Game feel for a boss: arrows don't push it around, and its death is a big moment
+        Enemy.knockback = 0f;
+        Enemy.deathPieces = 30;
+        Enemy.deathShake = 0.6f;
         warningCircle = CreateWarningCircle();
     }
 
