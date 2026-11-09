@@ -61,10 +61,11 @@ public static class Artifacts
 
     // ---------- Stats ----------
 
-    // All found artifacts that give this stat, added up. The player scripts read this when a run starts.
+    // All found artifacts that give this stat, plus the active set bonuses, added up.
+    // The player scripts read this when a run starts.
     public static float Bonus(ArtifactStat stat)
     {
-        float total = 0f;
+        float total = ArtifactSets.Bonus(stat);
         foreach (OwnedArtifact owned in Owned)
         {
             ArtifactType type = ArtifactCatalog.Find(owned.id);

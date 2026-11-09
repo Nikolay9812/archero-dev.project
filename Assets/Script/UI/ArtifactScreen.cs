@@ -31,7 +31,11 @@ public class ArtifactScreen : MonoBehaviour
     private static readonly Rarity?[] Filters = { null, Rarity.Legendary, Rarity.Epic, Rarity.Rare };
     private int filterIndex;
 
-    private ScrollRect grid;
+    private ScrollRect grid;    // CODEX: every artifact
+    private ScrollRect setList; // SET: one card per set
+    private bool showSets;
+    private Image codexTab;
+    private Image setTab;
     private Text foundText;
     private Text filterLabel;
     private Text wildShardsText;
@@ -51,12 +55,20 @@ public class ArtifactScreen : MonoBehaviour
         filterLabel = UiBuilder.CreateButton("FilterButton", panel, "", new Vector2(380f, 570f), new Vector2(280f, 90f), sectionColor, NextFilter);
         filterLabel.fontSize = 40;
 
-        // The grid: a fixed box in the middle (it scrolls if there are ever more artifacts than fit)
+        // The grid and the set list: the same fixed box in the middle, only one is shown at a time.
+        // Both scroll if there is more than fits.
         grid = UiBuilder.CreateScrollGrid("ArtifactGrid", panel, CellSize, 15f, Columns);
-        RectTransform gridRect = grid.GetComponent<RectTransform>();
-        gridRect.anchorMin = gridRect.anchorMax = new Vector2(0.5f, 0.5f);
-        gridRect.sizeDelta = new Vector2(1040f, 1040f);
-        gridRect.anchoredPosition = new Vector2(0f, -20f);
+        PlaceInMiddle(grid);
+        setList = UiBuilder.CreateScrollGrid("SetList", panel, new Vector2(1020f, 430f), 20f, 1);
+        PlaceInMiddle(setList);
+
+        // CODEX / SET switch under the box
+        Vector2 switchSize = new Vector2(260f, 80f);
+        Text codexLabel = UiBuilder.CreateButton("CodexTab", panel, "CODEX", new Vector2(-130f, -540f), switchSize, sectionColor, () => ShowSets(false));
+        Text setLabel = UiBuilder.CreateButton("SetTab", panel, "SET", new Vector2(130f, -540f), switchSize, sectionColor, () => ShowSets(true));
+        codexLabel.fontSize = setLabel.fontSize = 40;
+        codexTab = codexLabel.transform.parent.GetComponent<Image>();
+        setTab = setLabel.transform.parent.GetComponent<Image>();
 
         // The bottom row
         wildShardsText = UiBuilder.CreateText("WildShards", panel, "", 38, new Vector2(-260f, -660f), new Vector2(500f, 120f));
@@ -90,6 +102,15 @@ public class ArtifactScreen : MonoBehaviour
         wildShardsText.text = "Wild shards: " + Artifacts.WildShards + "\n<size=28>count for any artifact</size>";
         wishButton.color = Wallet.Gems >= ArtifactCatalog.WishPrice ? wishColor : unavailableColor;
 
+        // Only one of the two views is visible. The filter is for the codex only.
+        grid.gameObject.SetActive(!showSets);
+        setList.gameObject.SetActive(showSets);
+        filterLabel.transform.parent.gameObject.SetActive(!showSets);
+        codexTab.color = showSets ? sectionColor : wishColor;
+        setTab.color = showSets ? wishColor : sectionColor;
+
+        RefreshSets();
+
         UiBuilder.ClearChildren(grid.content);
         foreach (ArtifactType type in ArtifactCatalog.All)
         {
@@ -105,6 +126,76 @@ public class ArtifactScreen : MonoBehaviour
     {
         filterIndex = (filterIndex + 1) % Filters.Length; // % makes it go back to 0 after the last one
         Refresh();
+    }
+
+    void ShowSets(bool sets)
+    {
+        showSets = sets;
+        Refresh();
+    }
+
+    // Centers a scroll box in the page with a fixed size (CreateScrollGrid makes it fill the parent)
+    static void PlaceInMiddle(ScrollRect scroll)
+    {
+        RectTransform rect = scroll.GetComponent<RectTransform>();
+        rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.sizeDelta = new Vector2(1040f, 970f);
+        rect.anchoredPosition = new Vector2(0f, 15f);
+    }
+
+    // ---------- The SET view ----------
+
+    void RefreshSets()
+    {
+        UiBuilder.ClearChildren(setList.content);
+        foreach (ArtifactSet set in ArtifactSets.All) CreateSetCard(setList.content, set);
+    }
+
+    // One set: its name, its 3 artifacts on the left, its 3 bonus tiers on the right
+    void CreateSetCard(Transform parent, ArtifactSet set)
+    {
+        Image card = UiBuilder.CreateBox(set.title, parent, sectionColor, Vector2.zero, Vector2.zero); // the grid sets the size
+        Transform cardTransform = card.transform;
+
+        Text title = UiBuilder.CreateText("Title", cardTransform, set.title, 46, new Vector2(0f, 170f), new Vector2(960f, 70f));
+        title.alignment = TextAnchor.MiddleLeft;
+        Text count = UiBuilder.CreateText("Count", cardTransform, "Found " + ArtifactSets.FoundCount(set) + " / " + set.artifactIds.Length, 36, new Vector2(0f, 170f), new Vector2(960f, 70f));
+        count.alignment = TextAnchor.MiddleRight;
+
+        // The artifacts, small. Tap one to open its window.
+        ArtifactType[] members = ArtifactSets.Members(set);
+        for (int i = 0; i < members.Length; i++)
+        {
+            ArtifactType type = members[i];
+            CreateMiniCell(cardTransform, type, new Vector2(-400f + i * 155f, -30f));
+        }
+
+        // The tiers: bright when active, dark when not yet
+        for (int tier = 0; tier < set.tiers.Length; tier++)
+        {
+            bool active = ArtifactSets.IsTierActive(set, tier);
+            SetBonus bonus = set.tiers[tier];
+
+            Image row = UiBuilder.CreateBox("Tier" + tier, cardTransform, active ? new Color(0.25f, 0.5f, 0.3f) : windowColor, new Vector2(255f, 70f - tier * 100f), new Vector2(480f, 88f));
+            row.raycastTarget = false; // drags go through to the list
+            string line = ArtifactSets.Requirement(tier) + "\n<size=34>" + ArtifactCatalog.Format(bonus.stat, bonus.value) + "</size>";
+            Text text = UiBuilder.CreateText("Text", row.transform, line, 28, Vector2.zero, new Vector2(460f, 88f));
+            text.color = active ? Color.white : new Color(1f, 1f, 1f, 0.45f);
+        }
+    }
+
+    // A small artifact square for the set cards: letters, stars and name
+    void CreateMiniCell(Transform parent, ArtifactType type, Vector2 position)
+    {
+        bool found = Artifacts.IsFound(type);
+        Vector2 size = new Vector2(140f, 250f);
+
+        Text label = UiBuilder.CreateButton(type.id, parent, "", position, size, found ? GearCatalog.RarityColor(type.rarity) : notFoundColor, () => ShowArtifact(type));
+        Transform cell = label.transform.parent;
+
+        UiBuilder.CreateText("Letters", cell, found ? Initials(type.title) : "?", 56, new Vector2(0f, 50f), new Vector2(140f, 100f));
+        CreateStars(cell, Artifacts.Stars(type), new Vector2(0f, -25f), 16f, 25f);
+        UiBuilder.CreateText("Title", cell, type.title, 24, new Vector2(0f, -85f), new Vector2(135f, 70f));
     }
 
     // ---------- The grid ----------
@@ -187,6 +278,15 @@ public class ArtifactScreen : MonoBehaviour
         Text description = UiBuilder.CreateText("Description", window, type.description, 36, new Vector2(180f, 340f), new Vector2(500f, 280f));
         description.alignment = TextAnchor.UpperLeft;
         CreateStars(window, stars, new Vector2(-250f, 165f), 34f, 52f);
+
+        // Which set it belongs to, under the description
+        ArtifactSet set = ArtifactSets.SetOf(type);
+        if (set != null)
+        {
+            Text setText = UiBuilder.CreateText("Set", window, "Set: " + set.title, 34, new Vector2(180f, 165f), new Vector2(500f, 60f));
+            setText.alignment = TextAnchor.MiddleLeft;
+            setText.color = new Color(0.8f, 0.85f, 1f);
+        }
 
         // Base stats, with what the next star would make of them in green
         CreateSection(window, "BASE STATS", 80f);
