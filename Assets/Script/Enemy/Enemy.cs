@@ -53,6 +53,8 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
+        // Harder chapters give every enemy more HP (the boss's HP bar reads maxHealth, so it fits too)
+        maxHealth = Mathf.RoundToInt(maxHealth * ChapterManager.EnemyHealthMultiplier);
         CurrentHealth = maxHealth;
 
         // The agent finds the path and moves us; turning is done by our own TurnTowards
@@ -193,7 +195,7 @@ public class Enemy : MonoBehaviour
         // The Coin Bonus talent makes each coin worth more. 100 + 20 = 120% of the normal value.
         // The Lucky Amulet adds to it the same way.
         int bonusPercent = Upgrades.CoinBonusPercent + Inventory.BonusInt(GearStat.CoinBonus) + Artifacts.BonusInt(ArtifactStat.CoinBonus);
-        int valueWithBonus = Mathf.RoundToInt(coinValue * (100 + bonusPercent) / 100f);
+        int valueWithBonus = Mathf.RoundToInt(coinValue * ChapterManager.CoinMultiplier * (100 + bonusPercent) / 100f);
 
         for (int i = 0; i < coinDrops; i++)
         {

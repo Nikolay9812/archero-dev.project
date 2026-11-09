@@ -19,6 +19,13 @@ public class ChapterManager : MonoBehaviour
     // True while the player is in the chapter's final room. Enemy reads this.
     public static bool IsLastRoom { get; private set; }
 
+    // The chapter's difficulty, for Enemy and PlayerHealth. 1 when no chapter is playing (e.g. a test scene).
+    // "?." gives null when there is no chapter, and "?? 1f" turns that null into 1.
+    private static ChapterData current;
+    public static float EnemyHealthMultiplier => current?.enemyHealthMultiplier ?? 1f;
+    public static float EnemyDamageMultiplier => current?.enemyDamageMultiplier ?? 1f;
+    public static float CoinMultiplier => current?.coinMultiplier ?? 1f;
+
     private Room currentRoom;
     private int roomIndex = -1;    // -1 = no room loaded yet
     private bool changingRoom;     // true while fading, so the exit can't trigger twice
@@ -26,11 +33,13 @@ public class ChapterManager : MonoBehaviour
     void OnEnable()
     {
         RoomExit.Reached += OnRoomExitReached;
+        current = chapter; // before any room (and its enemies) is spawned
     }
 
     void OnDisable()
     {
         RoomExit.Reached -= OnRoomExitReached;
+        current = null;
     }
 
     void Start()

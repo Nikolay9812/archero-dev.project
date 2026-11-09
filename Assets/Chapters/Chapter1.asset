@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: Chapter1
   m_EditorClassIdentifier: Assembly-CSharp::ChapterData
   chapterName: Chapter 1
+  enemyHealthMultiplier: 1.5
+  enemyDamageMultiplier: 1.3
+  coinMultiplier: 1
   rooms:
   - {fileID: 5091625455786217931, guid: e3879ae100b61414c96d3ef50099414d, type: 3}
   - {fileID: 5091625455786217931, guid: 06a578dc42d3bf84b9336ba809946467, type: 3}

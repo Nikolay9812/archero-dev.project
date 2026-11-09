@@ -8,7 +8,14 @@ using UnityEngine;
 public class ChapterData : ScriptableObject
 {
     public string chapterName = "Chapter 1";
-    public int profileXpReward = 100; // permanent XP for finishing this chapter
+    // Difficulty: every enemy in this chapter gets this much HP and damage (1 = as set in the prefab, 1.5 = 50% more).
+    // Later chapters only need bigger numbers here, no new enemy prefabs.
+    // Changes in Play mode stay (it's an asset), so you can tune it while playing.
+    public float enemyHealthMultiplier = 1f;
+    public float enemyDamageMultiplier = 1f;
+    public float coinMultiplier = 1f;   // coins dropped by enemies
+
+    public int profileXpReward = 150; // permanent XP for finishing this chapter
     public int gemReward = 5;         // gems for finishing this chapter
     public int gearReward = 1;        // random pieces of gear for finishing this chapter
     public int wildShardReward = 5;   // artifact shards that count for any artifact

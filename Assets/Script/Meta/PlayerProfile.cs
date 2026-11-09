@@ -4,7 +4,7 @@ public static class PlayerProfile
 {
     public static int Level => SaveSystem.Data.profileLevel;
     public static int Xp => SaveSystem.Data.profileXp;
-    public static int XpToNextLevel => 100 + (Level - 1) * 50; // level 1: 100, level 2: 150, level 3: 200...
+    public static int XpToNextLevel => 100 + (Level - 1) * 25; // level 1: 100, level 2: 125, level 3: 150...
 
     public const int ShopUnlockLevel = 3;
     public static bool IsShopUnlocked => Level >= ShopUnlockLevel;

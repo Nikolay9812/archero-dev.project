@@ -85,6 +85,9 @@ public class PlayerHealth : MonoBehaviour
     {
         if (IsDead || invincibleTimer > 0f) return;
 
+        // Every enemy hit lands here, so this one line makes all enemies of a harder chapter hit harder
+        amount = Mathf.Max(1, Mathf.RoundToInt(amount * ChapterManager.EnemyDamageMultiplier));
+
         // Dodge (from artifacts): the hit misses. The short invincibility stops an enemy that keeps
         // touching her from rolling again every single frame.
         if (UnityEngine.Random.value < dodgeChance)
