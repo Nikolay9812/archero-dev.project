@@ -201,7 +201,7 @@ public class EnemyDasher : MonoBehaviour
         GameObject line = GameObject.CreatePrimitive(PrimitiveType.Cube);
         line.name = "DashWarningLine";
         Destroy(line.GetComponent<Collider>()); // just a picture, arrows should fly over it
-        line.GetComponent<Renderer>().material.color = warningColor;
+        RuntimeMaterial.Paint(line.GetComponent<Renderer>(), warningColor);
         line.SetActive(false);
         return line.transform;
     }

@@ -102,7 +102,7 @@ public class BowVisual : MonoBehaviour
         Destroy(piece.GetComponent<Collider>());
 
         Renderer pieceRenderer = piece.GetComponent<Renderer>();
-        pieceRenderer.material.color = color;
+        RuntimeMaterial.Paint(pieceRenderer, color);
         return pieceRenderer;
     }
 }

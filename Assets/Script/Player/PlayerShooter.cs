@@ -180,7 +180,7 @@ public class PlayerShooter : MonoBehaviour
         arrow.name = "Arrow";
         arrow.transform.SetPositionAndRotation(position, rotation);
         arrow.transform.localScale = new Vector3(0.08f, 0.08f, 0.7f);
-        arrow.GetComponent<Renderer>().material.color = new Color(1f, 0.85f, 0.3f);
+        RuntimeMaterial.Paint(arrow.GetComponent<Renderer>(), new Color(1f, 0.85f, 0.3f));
 
         arrow.AddComponent<Rigidbody>();
         return arrow.AddComponent<Arrow>();

@@ -49,7 +49,7 @@ public abstract class Pickup : MonoBehaviour
         shape.name = name;
         shape.transform.position = position;
         shape.transform.localScale = scale;
-        shape.GetComponent<Renderer>().material.color = color;
+        RuntimeMaterial.Paint(shape.GetComponent<Renderer>(), color);
 
         // We check the distance to the player ourselves, so the pickup needs no collider
         Destroy(shape.GetComponent<Collider>());

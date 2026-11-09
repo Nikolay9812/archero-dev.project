@@ -286,7 +286,7 @@ public class EnemyBoss : MonoBehaviour
         GameObject circle = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         circle.name = "SlamWarningCircle";
         Destroy(circle.GetComponent<Collider>()); // just a picture, nothing should bump into it
-        circle.GetComponent<Renderer>().material.color = warningColor;
+        RuntimeMaterial.Paint(circle.GetComponent<Renderer>(), warningColor);
         circle.SetActive(false);
         return circle.transform;
     }

@@ -199,7 +199,7 @@ public class SpinWheel : MonoBehaviour
         shape.transform.SetParent(parent, false);
         shape.transform.localPosition = position;
         shape.transform.localScale = scale;
-        shape.GetComponent<Renderer>().material.color = color;
+        RuntimeMaterial.Paint(shape.GetComponent<Renderer>(), color);
         Destroy(shape.GetComponent<Collider>());
     }
 

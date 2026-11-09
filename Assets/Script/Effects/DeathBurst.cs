@@ -24,7 +24,7 @@ public class DeathBurst : MonoBehaviour
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.name = "DeathPiece";
             Destroy(cube.GetComponent<Collider>()); // only for looks: arrows and the player go through
-            cube.GetComponent<Renderer>().material.color = color;
+            RuntimeMaterial.Paint(cube.GetComponent<Renderer>(), color);
 
             float pieceSize = size * Random.Range(0.6f, 1.2f);
             cube.transform.localScale = Vector3.one * pieceSize;

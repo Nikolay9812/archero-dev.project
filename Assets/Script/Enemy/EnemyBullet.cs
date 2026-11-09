@@ -32,7 +32,7 @@ public class EnemyBullet : MonoBehaviour
         ball.name = "EnemyBullet";
         ball.transform.SetPositionAndRotation(position, rotation);
         ball.transform.localScale = Vector3.one * 0.35f;
-        ball.GetComponent<Renderer>().material.color = color;
+        RuntimeMaterial.Paint(ball.GetComponent<Renderer>(), color);
 
         ball.AddComponent<Rigidbody>();
         return ball.AddComponent<EnemyBullet>();
