@@ -32,6 +32,7 @@ public class MainMenu : MonoBehaviour
     private const int GearPage = 1;
     private const int PlayPage = 2;
     private const int CollectiblePage = 3;
+    private const int EventsPage = 4;
     private readonly string[] tabNames = { "SHOP", "GEAR", "PLAY", "COLLECTIBLE", "EVENTS" };
 
     private bool canPressPlay; // false while fading, so two fades can't run against each other
@@ -119,7 +120,8 @@ public class MainMenu : MonoBehaviour
             else if (i == GearPage) gameObject.AddComponent<GearScreen>().Build(page, avatarModel, avatarAnimator);
             else if (i == PlayPage) BuildPlayPage(page);
             else if (i == CollectiblePage) gameObject.AddComponent<CollectibleScreen>().Build(page);
-            else BuildComingSoonPage(page, tabNames[i]);
+            else if (i == EventsPage) gameObject.AddComponent<EventsScreen>().Build(page);
+            else BuildComingSoonPage(page, tabNames[i]); // a new tab without its own page yet
         }
 
         return swiper;
