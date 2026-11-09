@@ -1,0 +1,24 @@
+GreenChero - audio credits
+==========================
+
+MUSIC
+
+GameMusic.mp3 - "Rhythm Factory" by Zane Little Music
+  https://opengameart.org/content/rhythm-factory
+  License: CC0 (public domain, no attribution required)
+
+BossMusic.mp3 - "8-bit Danger!! Strong Boss" by HydroGene
+  https://opengameart.org/content/8-bit-danger-strong-boss
+  License: CC0 (public domain, no attribution required)
+
+MenuMusic.mp3 - "8-bit - Truth" by HydroGene
+  https://opengameart.org/content/8-bit-truth
+  License: CC0 (public domain, no attribution required)
+  Album: https://hydrogene.itch.io/high-quality-8-bit-musics
+
+
+SOUND EFFECTS (Assets/Audio/Sound)
+
+Kenney (www.kenney.nl) - Impact Sounds, RPG Audio, Interface Sounds,
+Digital Audio, Music Jingles
+  License: CC0 (public domain, no attribution required)
