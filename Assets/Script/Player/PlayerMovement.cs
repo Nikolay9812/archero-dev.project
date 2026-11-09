@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
         speed += Upgrades.BonusMoveSpeed; // permanent talent from the Collectible page
         speed += Inventory.Bonus(GearStat.MoveSpeed); // worn gear
+        speed *= Artifacts.Multiplier(ArtifactStat.MoveSpeedPercent); // found artifacts
     }
 
     void OnEnable()

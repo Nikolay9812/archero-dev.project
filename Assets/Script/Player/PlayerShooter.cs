@@ -23,6 +23,11 @@ public class PlayerShooter : MonoBehaviour
     public float diagonalAngle = 30f;    // angle of the first pair; the second pair is twice as wide, and so on
     public int ricochetBounces = 0;      // how many times each arrow jumps to another enemy after a hit
 
+    // Artifact stats (set in Awake, passed on to every arrow)
+    public float critChance = 0f;        // 0.05 = 5% of all hits are critical
+    public float critMultiplier = 2f;    // a critical hit does this many times the damage
+    public float bossMultiplier = 1f;    // 1.1 = 10% more damage against bosses
+
     public Enemy CurrentTarget { get; private set; }
 
     // Fired when she STARTS drawing the bow (PlayerAnimation listens to it to play the bow animation).
@@ -47,6 +52,14 @@ public class PlayerShooter : MonoBehaviour
         // Worn gear from the GEAR page
         damage += Inventory.BonusInt(GearStat.Damage);
         fireRate += Inventory.Bonus(GearStat.FireRate);
+
+        // Found artifacts from the Collectible page: first the flat bonus, then the percent bonuses on top
+        damage += Artifacts.BonusInt(ArtifactStat.Attack);
+        damage = Mathf.RoundToInt(damage * Artifacts.Multiplier(ArtifactStat.AttackPercent));
+        fireRate *= Artifacts.Multiplier(ArtifactStat.AttackSpeedPercent);
+        critChance = Artifacts.Bonus(ArtifactStat.CritChance) / 100f; // 5% -> 0.05
+        critMultiplier = 2f + Artifacts.Bonus(ArtifactStat.CritDamage) / 100f;
+        bossMultiplier = Artifacts.Multiplier(ArtifactStat.BossDamage);
 
         // Bought with gems in the shop
         if (GemShop.Owns(GemItem.ExtraArrow)) frontArrows++;
@@ -158,6 +171,9 @@ public class PlayerShooter : MonoBehaviour
 
         arrow.damage = damage;
         arrow.bounces = ricochetBounces;
+        arrow.critChance = critChance;
+        arrow.critMultiplier = critMultiplier;
+        arrow.bossMultiplier = bossMultiplier;
     }
 
     // Placeholder arrow until we have a real model: a thin stretched cube

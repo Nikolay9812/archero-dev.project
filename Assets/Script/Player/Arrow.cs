@@ -11,6 +11,11 @@ public class Arrow : MonoBehaviour
     public int bounces = 0;          // Ricochet skill: jumps to another enemy this many times
     public float bounceRange = 7f;   // only jumps to enemies this close
 
+    // Set by PlayerShooter from the artifacts
+    public float critChance = 0f;
+    public float critMultiplier = 2f;
+    public float bossMultiplier = 1f;
+
     private Enemy lastHit; // the enemy we just bounced off, so we don't hit it again right away
 
     void Awake()
@@ -43,7 +48,14 @@ public class Arrow : MonoBehaviour
         Enemy enemy = other.GetComponentInParent<Enemy>();
         if (enemy == null || enemy.IsDead || enemy == lastHit) return;
 
-        enemy.TakeDamage(damage);
+        // Each hit works out its own damage, so one arrow can crit on one enemy and not on the next
+        float hit = damage;
+        if (enemy.GetComponent<EnemyBoss>() != null) hit *= bossMultiplier;
+
+        bool critical = Random.value < critChance; // critChance 0 = never
+        if (critical) hit *= critMultiplier;
+
+        enemy.TakeDamage(Mathf.RoundToInt(hit), critical);
         enemy.Knockback(transform.forward); // push it back the way the arrow was flying
 
         // Ricochet: fly on to the next enemy instead of disappearing

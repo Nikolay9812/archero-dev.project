@@ -11,6 +11,7 @@ public class ChapterData : ScriptableObject
     public int profileXpReward = 100; // permanent XP for finishing this chapter
     public int gemReward = 5;         // gems for finishing this chapter
     public int gearReward = 1;        // random pieces of gear for finishing this chapter
+    public int wildShardReward = 5;   // artifact shards that count for any artifact
     public bool firstRoomIsStartRoom = true; // true = the room counter doesn't count the first room
     public List<Room> rooms = new List<Room>();
 }

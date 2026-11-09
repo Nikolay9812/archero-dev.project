@@ -29,6 +29,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Game feel")]
     public Color damageNumberColor = Color.white;
+    public Color critNumberColor = new Color(1f, 0.6f, 0.1f);
     public float knockback = 3f;       // how hard arrows push it back (0 = not at all, the boss uses 0)
     public int deathPieces = 8;        // little cubes that fly out when it dies
     public float deathShake = 0.15f;   // how much the camera shakes when it dies
@@ -140,7 +141,8 @@ public class Enemy : MonoBehaviour
         if (flashTimer <= 0f) SetColor(null);
     }
 
-    public void TakeDamage(int amount)
+    // "critical = false" is a default value: callers may leave it out, then it is false
+    public void TakeDamage(int amount, bool critical = false)
     {
         if (IsDead) return;
 
@@ -148,7 +150,11 @@ public class Enemy : MonoBehaviour
         flashTimer = hitFlashTime;
         SetColor(hitFlashColor);
         HealthChanged?.Invoke();
-        DamageNumber.Spawn(TopOfBody() + Vector3.up * 0.3f, amount, damageNumberColor);
+
+        // A critical hit shows its number in orange with a "!" behind it
+        Vector3 numberPosition = TopOfBody() + Vector3.up * 0.3f;
+        if (critical) DamageNumber.Spawn(numberPosition, amount + "!", critNumberColor);
+        else DamageNumber.Spawn(numberPosition, amount, damageNumberColor);
 
         if (IsDead) Die();
         else SoundManager.Play(Sound.EnemyHit, true);
@@ -186,7 +192,7 @@ public class Enemy : MonoBehaviour
 
         // The Coin Bonus talent makes each coin worth more. 100 + 20 = 120% of the normal value.
         // The Lucky Amulet adds to it the same way.
-        int bonusPercent = Upgrades.CoinBonusPercent + Inventory.BonusInt(GearStat.CoinBonus);
+        int bonusPercent = Upgrades.CoinBonusPercent + Inventory.BonusInt(GearStat.CoinBonus) + Artifacts.BonusInt(ArtifactStat.CoinBonus);
         int valueWithBonus = Mathf.RoundToInt(coinValue * (100 + bonusPercent) / 100f);
 
         for (int i = 0; i < coinDrops; i++)

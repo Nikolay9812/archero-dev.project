@@ -44,6 +44,7 @@ public class ChapterManager : MonoBehaviour
         Wallet.StartRun();
         PlayerProfile.StartRun();
         Inventory.StartRun();
+        Artifacts.StartRun();
         StartCoroutine(GoToRoom(0));
     }
 
@@ -68,6 +69,7 @@ public class ChapterManager : MonoBehaviour
             PlayerProfile.AddXp(chapter.profileXpReward);
             Wallet.AddGems(chapter.gemReward);
             for (int i = 0; i < chapter.gearReward; i++) Inventory.AddRandomGear(Rarity.Common);
+            Artifacts.AddWildShards(chapter.wildShardReward);
             ChapterCleared?.Invoke();
             return;
         }

@@ -33,4 +33,19 @@ public static class SaveTools
 
         Debug.Log("You now own " + Inventory.All.Count + " pieces of gear.");
     }
+
+    // Finds half of the artifacts (with 15 shards each, enough for one star) and adds 30 wild shards
+    [MenuItem("Archero/Add Test Artifacts")]
+    static void AddTestArtifacts()
+    {
+        for (int i = 0; i < ArtifactCatalog.All.Length; i += 2) // i += 2 = every second artifact
+        {
+            ArtifactType type = ArtifactCatalog.All[i];
+            Artifacts.Collect(type);
+            Artifacts.AddShards(type, 15);
+        }
+        Artifacts.AddWildShards(30);
+
+        Debug.Log("Found " + Artifacts.FoundCount + " artifacts, wild shards: " + Artifacts.WildShards);
+    }
 }

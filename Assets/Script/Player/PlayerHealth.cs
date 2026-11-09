@@ -32,6 +32,7 @@ public class PlayerHealth : MonoBehaviour
     private Renderer[] renderers;
     private float invincibleTimer;
     private bool reviveUsed;
+    private float dodgeChance; // 0.04 = 4% of all hits miss her
     private Transform barRoot;
     private Image barFill;
     private Text barText;
@@ -41,6 +42,11 @@ public class PlayerHealth : MonoBehaviour
         Instance = this;
         maxHealth += Upgrades.BonusHealth; // permanent talent from the Collectible page
         maxHealth += Inventory.BonusInt(GearStat.MaxHealth); // worn gear
+
+        // Found artifacts: flat HP first, then the percent on top of everything
+        maxHealth += Artifacts.BonusInt(ArtifactStat.MaxHealth);
+        maxHealth = Mathf.RoundToInt(maxHealth * Artifacts.Multiplier(ArtifactStat.HealthPercent));
+        dodgeChance = Artifacts.Bonus(ArtifactStat.Dodge) / 100f;
         CurrentHealth = maxHealth;
         BuildBar();
         UpdateBar();
@@ -80,6 +86,15 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(int amount)
     {
         if (IsDead || invincibleTimer > 0f) return;
+
+        // Dodge (from artifacts): the hit misses. The short invincibility stops an enemy that keeps
+        // touching her from rolling again every single frame.
+        if (UnityEngine.Random.value < dodgeChance)
+        {
+            DamageNumber.Spawn(transform.position + barOffset + Vector3.up * 0.4f, "DODGE", Color.white);
+            invincibleTimer = invincibleTime;
+            return;
+        }
 
         CurrentHealth = Mathf.Max(CurrentHealth - amount, 0);
         UpdateBar();

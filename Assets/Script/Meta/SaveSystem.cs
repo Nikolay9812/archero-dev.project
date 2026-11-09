@@ -32,6 +32,10 @@ public class SaveData
     public int[] scrolls = new int[GearCatalog.SlotCount];  // scrolls owned for each slot
     public int nextGearId = 1;                               // every new item gets its own id number
 
+    // Artifacts (see Artifacts). Only found artifacts are in the list.
+    public List<OwnedArtifact> artifacts = new List<OwnedArtifact>();
+    public int wildShards; // shards that count for ANY artifact
+
     // Player settings (see Settings). 1 = full volume, 0 = off.
     public float musicVolume = 1f;
     public float soundVolume = 1f;
@@ -46,6 +50,15 @@ public class OwnedGear
     public string type; // the id of its GearType, e.g. "oak_bow"
     public Rarity rarity;
     public int level = 1;
+}
+
+// One artifact the player has found. Unlike gear there is only one of each.
+[Serializable]
+public class OwnedArtifact
+{
+    public string id; // the id of its ArtifactType, e.g. "sun_medal"
+    public int stars;
+    public int shards; // collected towards the next star
 }
 
 // Reads and writes the save file. "static" = there is only one, it needs no GameObject,

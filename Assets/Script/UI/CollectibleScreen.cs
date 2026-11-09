@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // The Collectible page of the main menu, with two small tabs of its own: Talent Cards and Artifact.
-// The DRAW button upgrades a random talent, see Upgrades.TryDraw.
+// The DRAW button upgrades a random talent, see Upgrades.TryDraw. The Artifact tab is built by ArtifactScreen.
 // MainMenu adds this component by code and calls Build(), so there is nothing to set up in the scene.
 public class CollectibleScreen : MonoBehaviour
 {
@@ -53,7 +53,7 @@ public class CollectibleScreen : MonoBehaviour
         artifactTab = artifactLabel.transform.parent.GetComponent<Image>();
 
         BuildTalentPanel(talentPanel.transform);
-        UiBuilder.CreateText("ComingSoon", artifactPanel.transform, "Coming soon", 70, Vector2.zero, new Vector2(1000f, 120f));
+        gameObject.AddComponent<ArtifactScreen>().Build(artifactPanel.transform);
 
         Refresh();
         ShowTab(true);

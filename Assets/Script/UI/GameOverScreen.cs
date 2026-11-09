@@ -62,7 +62,8 @@ public class GameOverScreen : MonoBehaviour
         // Gear and scrolls found on the way (only shown if there were any)
         string loot = "";
         if (Inventory.GearFoundThisRun > 0) loot += "+" + Inventory.GearFoundThisRun + " gear   ";
-        if (Inventory.ScrollsFoundThisRun > 0) loot += "+" + Inventory.ScrollsFoundThisRun + " scrolls";
+        if (Inventory.ScrollsFoundThisRun > 0) loot += "+" + Inventory.ScrollsFoundThisRun + " scrolls   ";
+        if (Artifacts.WildShardsFoundThisRun > 0) loot += "+" + Artifacts.WildShardsFoundThisRun + " shards";
         if (loot != "") coinsText.text += "\n" + loot;
         buttonText.text = buttonLabel;
         panel.SetActive(true);

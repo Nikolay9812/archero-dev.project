@@ -19,6 +19,13 @@ public class DamageNumber : MonoBehaviour
     // Creates one floating number at 'position' (a point in the world, e.g. above an enemy's head)
     public static void Spawn(Vector3 position, int amount, Color color)
     {
+        Spawn(position, amount.ToString(), color);
+    }
+
+    // The same with any text instead of a number, e.g. "DODGE" (two methods may share a name
+    // when their inputs are different: C# picks the one that fits)
+    public static void Spawn(Vector3 position, string label, Color color)
+    {
         // World-space canvas: 100 UI pixels = 1 meter
         const float pixelsPerMeter = 100f;
 
@@ -42,7 +49,7 @@ public class DamageNumber : MonoBehaviour
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
         text.verticalOverflow = VerticalWrapMode.Overflow;
         text.color = color;
-        text.text = amount.ToString();
+        text.text = label;
         text.rectTransform.sizeDelta = new Vector2(200f, 60f);
 
         Outline outline = textObject.AddComponent<Outline>();
