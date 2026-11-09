@@ -34,6 +34,14 @@ public static class SaveTools
         Debug.Log("You now own " + Inventory.All.Count + " pieces of gear.");
     }
 
+    // Every "Purchases left" and every free chest comes back, as if a new day, week and month had started
+    [MenuItem("Archero/Reset Shop Limits + Free Chests")]
+    static void ResetShop()
+    {
+        Shop.ResetForTesting();
+        Debug.Log("Shop limits and free chests are reset.");
+    }
+
     // Finds half of the artifacts (with 15 shards each, enough for one star) and adds 30 wild shards
     [MenuItem("Archero/Add Test Artifacts")]
     static void AddTestArtifacts()

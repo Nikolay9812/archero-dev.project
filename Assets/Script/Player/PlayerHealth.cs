@@ -8,7 +8,6 @@ public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 300;
     public float invincibleTime = 0.6f; // after a hit, ignore damage for this long (and blink)
-    public float reviveInvincibleTime = 2.5f; // the same after coming back with the Revive item
 
     // HP bar look (sizes in meters, the bar always faces the camera)
     public Vector3 barOffset = new Vector3(0f, 2.1f, 0f);
@@ -31,7 +30,6 @@ public class PlayerHealth : MonoBehaviour
 
     private Renderer[] renderers;
     private float invincibleTimer;
-    private bool reviveUsed;
     private float dodgeChance; // 0.04 = 4% of all hits miss her
     private Transform barRoot;
     private Image barFill;
@@ -104,19 +102,8 @@ public class PlayerHealth : MonoBehaviour
         CameraFollow.Shake(hitShake, 0.2f);
         SoundManager.Play(Sound.PlayerHurt, true);
 
-        if (IsDead && GemShop.Owns(GemItem.Revive) && !reviveUsed) Revive();
-        else if (IsDead) Die();
+        if (IsDead) Die();
         else invincibleTimer = invincibleTime;
-    }
-
-    // The Revive item from the shop: back on her feet once per run. She blinks longer, to get away safely.
-    void Revive()
-    {
-        reviveUsed = true;
-        SoundManager.Play(Sound.Heal);
-        CurrentHealth = maxHealth / 2;
-        invincibleTimer = reviveInvincibleTime;
-        UpdateBar();
     }
 
     public void Heal(int amount)

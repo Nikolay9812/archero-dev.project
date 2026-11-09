@@ -66,4 +66,25 @@ public static class Wallet
         Changed?.Invoke();
         return true;
     }
+
+    // Crystals are only sold in the shop, for real money. They can pay for any paid offer instead of money.
+    public static int Crystals => SaveSystem.Data.crystals;
+
+    public static void AddCrystals(int amount)
+    {
+        SaveSystem.Data.crystals += amount;
+        SaveSystem.Save();
+        Changed?.Invoke();
+    }
+
+    public static bool SpendCrystals(int amount)
+    {
+        if (Crystals < amount) return false;
+
+        SaveSystem.Data.crystals -= amount;
+        SaveSystem.Save();
+
+        Changed?.Invoke();
+        return true;
+    }
 }

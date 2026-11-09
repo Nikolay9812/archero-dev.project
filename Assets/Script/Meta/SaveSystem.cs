@@ -22,9 +22,16 @@ public class SaveData
     public int roomHealUpgrade;
     public int coinUpgrade;
 
-    // Items bought with gems in the shop (see GemShop)
-    public bool ownsExtraArrow;
-    public bool ownsRevive;
+    // Crystals: the currency bought with real money, which can pay for any paid shop offer (see Wallet)
+    public int crystals;
+
+    // The shop (see Shop): how often each offer was bought, and the gear chests' keys, free opens and luck counters
+    public List<ShopPurchase> shopPurchases = new List<ShopPurchase>();
+    public List<ChestState> chests = new List<ChestState>();
+
+    // Wishes in a row without an Epic / Legendary artifact. A wish after enough bad luck is guaranteed better.
+    public int wishesWithoutEpic;
+    public int wishesWithoutLegendary;
 
     // Gear (see Inventory). JsonUtility can save lists and arrays of [Serializable] classes too.
     public List<OwnedGear> gear = new List<OwnedGear>();
@@ -59,6 +66,27 @@ public class OwnedArtifact
     public string id; // the id of its ArtifactType, e.g. "sun_medal"
     public int stars;
     public int shards; // collected towards the next star
+}
+
+// How often one shop offer was bought in one period. 'period' is the day/week/month number from Shop.PeriodKey,
+// so when a new day starts the old record no longer counts: the offer is back without resetting anything.
+[Serializable]
+public class ShopPurchase
+{
+    public string id;    // the offer's id, e.g. "weekly_2"
+    public int period;
+    public int count;
+}
+
+// One gear chest in the shop
+[Serializable]
+public class ChestState
+{
+    public string id;               // the ChestType's id, e.g. "royal"
+    public int keys;                // a key opens the chest once without paying
+    public long lastFreeOpen;       // when it was last opened for free (DateTime ticks, UTC; 0 = never)
+    public int opensWithoutEpic;    // opens in a row without Epic or better
+    public int opensWithoutLegendary;
 }
 
 // Reads and writes the save file. "static" = there is only one, it needs no GameObject,

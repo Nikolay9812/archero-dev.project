@@ -136,9 +136,50 @@ public static class Artifacts
         shards = 0;
         if (!Wallet.SpendGems(ArtifactCatalog.WishPrice)) return false;
 
-        won = ArtifactCatalog.RandomForWish();
-        shards = Collect(won);
+        WishResult result = WishOnce();
+        won = result.artifact;
+        shards = result.shards;
         return true;
+    }
+
+    // What one wish gave
+    public class WishResult
+    {
+        public ArtifactType artifact;
+        public int shards; // 0 = it was a new artifact
+    }
+
+    // Several wishes at once (the shop's "Wish x10"). Pays for all of them first, or for none.
+    public static bool TryWish(int count, List<WishResult> results)
+    {
+        if (!Wallet.SpendGems(ArtifactCatalog.WishPrice * count)) return false;
+
+        for (int i = 0; i < count; i++) results.Add(WishOnce());
+        return true;
+    }
+
+    // How many more wishes until Epic (or Legendary) is guaranteed. The shop shows these.
+    public static int WishesUntilEpic => ArtifactCatalog.EpicWishPity - SaveSystem.Data.wishesWithoutEpic;
+    public static int WishesUntilLegendary => ArtifactCatalog.LegendaryWishPity - SaveSystem.Data.wishesWithoutLegendary;
+
+    // One wish, already paid for. Counts the bad luck: after too many wishes without Epic, the next one is Epic.
+    static WishResult WishOnce()
+    {
+        SaveData data = SaveSystem.Data;
+
+        Rarity minimum = Rarity.Common;
+        if (data.wishesWithoutEpic + 1 >= ArtifactCatalog.EpicWishPity) minimum = Rarity.Epic;
+        if (data.wishesWithoutLegendary + 1 >= ArtifactCatalog.LegendaryWishPity) minimum = Rarity.Legendary;
+
+        WishResult result = new WishResult();
+        result.artifact = ArtifactCatalog.RandomForWish(minimum);
+
+        // Lucky wish = start counting again. Legendary counts as "Epic or better" too.
+        data.wishesWithoutEpic = result.artifact.rarity >= Rarity.Epic ? 0 : data.wishesWithoutEpic + 1;
+        data.wishesWithoutLegendary = result.artifact.rarity >= Rarity.Legendary ? 0 : data.wishesWithoutLegendary + 1;
+
+        result.shards = Collect(result.artifact); // this also saves
+        return result;
     }
 
     // Uses the artifact's own shards first, the wild shards only for what is missing

@@ -93,8 +93,12 @@ public static class ArtifactCatalog
     public const int MaxStars = 5;
     public const int WishPrice = 10; // gems per wish
 
+    // Bad luck protection: at the latest the 8th wish is Epic or better, the 40th Legendary
+    public const int EpicWishPity = 8;
+    public const int LegendaryWishPity = 40;
+
     // Chance (in percent) of each rarity for one wish. Index = rarity number (Common, Great, Rare, Epic, Legendary).
-    private static readonly int[] WishChance = { 0, 0, 60, 30, 10 };
+    public static readonly int[] WishChance = { 0, 0, 60, 30, 10 };
 
     // Shards for wishing an artifact you already have. Rarer artifacts give fewer.
     private static readonly int[] DuplicateShards = { 10, 10, 10, 6, 4 };
@@ -125,8 +129,9 @@ public static class ArtifactCatalog
         return DuplicateShards[(int)rarity];
     }
 
-    // Rolls a rarity with the wish chances (same idea as GearCatalog.RandomRarity), then a random artifact of it
-    public static ArtifactType RandomForWish()
+    // Rolls a rarity with the wish chances (same idea as GearCatalog.RandomRarity), then a random artifact of it.
+    // Anything below 'minimum' becomes 'minimum' (used for the bad luck protection).
+    public static ArtifactType RandomForWish(Rarity minimum)
     {
         int roll = Random.Range(0, 100);
         Rarity rarity = Rarity.Rare;
@@ -139,6 +144,7 @@ public static class ArtifactCatalog
             }
             roll -= WishChance[i];
         }
+        if (rarity < minimum) rarity = minimum;
 
         // Collect every artifact of that rarity, then pick one of them
         List<ArtifactType> possible = new List<ArtifactType>();

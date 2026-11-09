@@ -4,13 +4,15 @@ using UnityEngine.UI;
 
 // A list that scrolls up and down, inside pages that swipe left and right (PageSwiper).
 // A normal ScrollRect would take EVERY drag, so you could no longer swipe pages while touching the list.
-// This one looks at the start of each drag: mostly sideways -> hand the drag to the parent (the swiper),
-// mostly up or down -> scroll the list as usual.
+// This one looks at the start of each drag: if it goes the way this list scrolls, the list scrolls as usual,
+// otherwise the drag goes to the parent. It works the other way round too: a sideways list (Carousel)
+// inside an up-and-down list hands the up-and-down drags to that list.
 //
 // "override" replaces a method of ScrollRect, "base.X" still runs ScrollRect's own version.
 public class NestedScrollRect : ScrollRect
 {
-    private bool dragIsForParent;
+    // "protected" = private, but classes that build on this one (Carousel) can read it too
+    protected bool dragIsForParent;
 
     public override void OnInitializePotentialDrag(PointerEventData eventData)
     {
@@ -20,7 +22,8 @@ public class NestedScrollRect : ScrollRect
 
     public override void OnBeginDrag(PointerEventData eventData)
     {
-        dragIsForParent = Mathf.Abs(eventData.delta.x) > Mathf.Abs(eventData.delta.y);
+        bool sideways = Mathf.Abs(eventData.delta.x) > Mathf.Abs(eventData.delta.y);
+        dragIsForParent = sideways ? !horizontal : !vertical; // the way we don't scroll belongs to the parent
 
         if (dragIsForParent) PassToParent(eventData, ExecuteEvents.beginDragHandler);
         else base.OnBeginDrag(eventData);

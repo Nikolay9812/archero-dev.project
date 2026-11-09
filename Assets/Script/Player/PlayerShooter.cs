@@ -60,9 +60,6 @@ public class PlayerShooter : MonoBehaviour
         critChance = Artifacts.Bonus(ArtifactStat.CritChance) / 100f; // 5% -> 0.05
         critMultiplier = 2f + Artifacts.Bonus(ArtifactStat.CritDamage) / 100f;
         bossMultiplier = Artifacts.Multiplier(ArtifactStat.BossDamage);
-
-        // Bought with gems in the shop
-        if (GemShop.Owns(GemItem.ExtraArrow)) frontArrows++;
     }
 
     void Update()
